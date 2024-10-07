@@ -8,15 +8,16 @@
         "${mod_author}"
     ],
     "contact": {
-        "homepage": "https://fabricmc.net/",
-        "sources": "https://github.com/FabricMC/fabric-example-mod"
+        "homepage": "${homepage}",
+        "sources": "${source},",
+        "issues": "${issues}"
     },
     "license": "${license}",
     "icon": "${mod_id}.png",
-    "environment": "*",
+    "environment": "${mod_environment}",
     "entrypoints": {
         "main": [
-            "com.example.examplemod.ExampleMod"
+          "io.github.tavstal.respawntimer.FabricMain"
         ]
     },
     "mixins": [
