@@ -142,9 +142,9 @@ public class CommonClass {
         else if (source.is(CACTUS)) {
             respawnTime = CONFIG().CactusDeathDuration;
         }
-        else if (source.is(CAMPFIRE)) {
+        /*else if (source.is(CAMPFIRE)) {
             respawnTime = CONFIG().CampfireDeathDuration;
-        }
+        }*/
         else if (source.is(CRAMMING)) {
             respawnTime = CONFIG().CrammingDeathDuration;
         }
@@ -241,9 +241,9 @@ public class CommonClass {
         else if (source.is(SONIC_BOOM)) {
             respawnTime = CONFIG().SonicBoomDeathDuration;
         }
-        else if (source.is(SPIT)) {
+        /*else if (source.is(SPIT)) {
             respawnTime = CONFIG().SpitDeathDuration;
-        }
+        }*/
         else if (source.is(STALAGMITE)) {
             respawnTime = CONFIG().StalagmiteDeathDuration;
         }
@@ -262,9 +262,9 @@ public class CommonClass {
         else if (source.is(TRIDENT)) {
             respawnTime = CONFIG().TridentDeathDuration;
         }
-        else if (source.is(WIND_CHARGE)) {
+        /*else if (source.is(WIND_CHARGE)) {
             respawnTime = CONFIG().WindChargeDeathDuration;
-        }
+        }*/
         else if (source.is(WITHER)) {
             respawnTime = CONFIG().WitherDeathDuration;
         }
