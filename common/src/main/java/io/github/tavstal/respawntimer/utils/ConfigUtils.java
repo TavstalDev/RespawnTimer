@@ -16,7 +16,7 @@ import java.util.List;
 
 public class ConfigUtils {
     private  static final String minecraftRootPath = System.getProperty("user.dir");
-    private static final Path configFilePath = Paths.get(minecraftRootPath, "config", "tafk.toml");
+    private static final Path configFilePath = Paths.get(minecraftRootPath, "config", "respawn-timer.toml");
 
     public static CommonConfig LoadConfig() {
         try {

@@ -8,9 +8,9 @@
         "${mod_author}"
     ],
     "contact": {
-        "homepage": "${homepage}",
-        "sources": "${source},",
-        "issues": "${issues}"
+        "homepage": "https://github.com/TavstalDev/RespawnTimer",
+        "sources": "https://github.com/TavstalDev/RespawnTimer,",
+        "issues": "https://github.com/TavstalDev/RespawnTimer/issues"
     },
     "license": "${license}",
     "icon": "${mod_id}.png",

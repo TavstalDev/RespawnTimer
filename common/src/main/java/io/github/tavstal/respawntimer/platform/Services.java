@@ -1,5 +1,6 @@
 package io.github.tavstal.respawntimer.platform;
 
+import io.github.tavstal.respawntimer.CommonClass;
 import io.github.tavstal.respawntimer.platform.services.IPlatformHelper;
 
 import java.util.ServiceLoader;
@@ -23,7 +24,7 @@ public class Services {
         final T loadedService = ServiceLoader.load(clazz)
                 .findFirst()
                 .orElseThrow(() -> new NullPointerException("Failed to load service for " + clazz.getName()));
-        Constants.LOG.debug("Loaded {} for service {}", loadedService, clazz);
+        CommonClass.LOG.debug("Loaded {} for service {}", loadedService, clazz);
         return loadedService;
     }
 }
