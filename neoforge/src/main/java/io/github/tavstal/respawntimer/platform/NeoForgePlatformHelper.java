@@ -13,6 +13,18 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
     }
 
     @Override
+    public boolean isClientSide() {
+
+        return FMLLoader.getDist().isClient();
+    }
+
+    @Override
+    public boolean isServerSide() {
+
+        return FMLLoader.getDist().isDedicatedServer();
+    }
+
+    @Override
     public boolean isModLoaded(String modId) {
 
         return ModList.get().isLoaded(modId);

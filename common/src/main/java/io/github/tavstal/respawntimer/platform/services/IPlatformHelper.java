@@ -18,6 +18,18 @@ public interface IPlatformHelper {
     boolean isModLoaded(String modId);
 
     /**
+     *
+     * @return True if the mod is loaded by the client
+     */
+    boolean isClientSide();
+
+    /**
+     *
+     * @return True if the mod is loaded by the server
+     */
+    boolean isServerSide();
+
+    /**
      * Check if the game is currently in a development environment.
      *
      * @return True if in a development environment, false otherwise.
