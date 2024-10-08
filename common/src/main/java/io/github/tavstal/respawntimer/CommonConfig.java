@@ -147,7 +147,7 @@ public class CommonConfig {
 
         DiedText = "§cYou died.";
         RespawnTimerMessage = "§cYou will respawn in {0}s.";
-        RespawnMessage = "§aYou have    respawned.";
+        RespawnMessage = "§aYou have respawned.";
 
         ArrowDeathDuration = 120;
         BadRespawnPointDeathDuration = 10;

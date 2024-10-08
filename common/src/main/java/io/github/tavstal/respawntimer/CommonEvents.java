@@ -68,12 +68,13 @@ public class CommonEvents {
             }
 
             CommonClass.SetPlayerDead(player, damageSource);
+            player.getServer().getPlayerList().broadcastSystemMessage(damageSource.getLocalizedDeathMessage(player), false);
 
             if (CommonClass.CONFIG().EnableChatMessages) {
                 player.sendSystemMessage(ModUtils.Literal(CommonClass.CONFIG().DiedText));
             }
             if (CommonClass.CONFIG().EnableTitleScreen) {
-                PlayerUtils.SendTitleMessage(player, CommonClass.CONFIG().DiedText, "");
+                PlayerUtils.SendTitleMessage(player, CommonClass.CONFIG().DiedText, CommonClass.CONFIG().DiedText, 5);
             }
             if (CommonClass.CONFIG().EnableActionBarMessage) {
                 player.displayClientMessage(ModUtils.Literal(CommonClass.CONFIG().DiedText), true);
@@ -101,8 +102,8 @@ public class CommonEvents {
             if (player == null)
                 continue;
 
-            long duration = Duration.between(deadPlayerDictionary.get(i), LocalDateTime.now()).getSeconds();
-            if (duration < 0)
+            long duration = Duration.between(LocalDateTime.now(), deadPlayerDictionary.get(i)).getSeconds();
+            if (duration <= 0)
             {
                 CommonClass.RespawnPlayer(player, false);
 
@@ -110,7 +111,7 @@ public class CommonEvents {
                     player.sendSystemMessage(ModUtils.Literal(CommonClass.CONFIG().RespawnMessage));
                 }
                 if (CommonClass.CONFIG().EnableTitleScreen) {
-                    PlayerUtils.SendTitleMessage(player, "", CommonClass.CONFIG().RespawnMessage);
+                    PlayerUtils.SendTitleMessage(player, "", CommonClass.CONFIG().RespawnMessage, 5);
                 }
                 if (CommonClass.CONFIG().EnableActionBarMessage) {
                     player.displayClientMessage(ModUtils.Literal(CommonClass.CONFIG().RespawnMessage), true);
@@ -124,7 +125,7 @@ public class CommonEvents {
                 player.sendSystemMessage(ModUtils.Literal(respawningText));
             }
             if (CommonClass.CONFIG().EnableTitleScreen) {
-                PlayerUtils.SendTitleMessage(player, CommonClass.CONFIG().DiedText, respawningText);
+                PlayerUtils.SendTitleMessage(player, CommonClass.CONFIG().DiedText, respawningText, 0);
             }
             if (CommonClass.CONFIG().EnableActionBarMessage) {
                 player.displayClientMessage(ModUtils.Literal(respawningText), true);

@@ -2,7 +2,12 @@ package io.github.tavstal.respawntimer;
 
 import io.github.tavstal.respawntimer.utils.ConfigUtils;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.stats.Stats;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.effect.MobEffectInstance;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.level.GameType;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.LogManager;
@@ -11,6 +16,7 @@ import org.apache.logging.log4j.core.config.LoggerConfig;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Dictionary;
 import java.util.Hashtable;
@@ -75,28 +81,50 @@ public class CommonClass {
 
     public static void SetPlayerDead(ServerPlayer player, DamageSource source) {
         player.setGameMode(GameType.SPECTATOR);
-        player.setHealth(40);
-        player.clearFire();
+        player.setHealth(20);
         player.removeAllEffects();
+        player.getFoodData().setFoodLevel(20);
+        player.getFoodData().setSaturation(5F);
+        player.clearFire();
+        try {
+            player.level().playSound(null, player.blockPosition(), SoundEvents.LIGHTNING_BOLT_THUNDER, SoundSource.BLOCKS);
+        }
+        catch (Exception ex) { /* ignore */ }
 
-        if (IsPlayerDead(player.getStringUUID()))
+        if (IsPlayerDead(player.getStringUUID())) {
+            long duration = Duration.between(LocalDateTime.now(), _deadPlayers.get(player.getStringUUID())).getSeconds();
+            MobEffectInstance blindnessEffect = new MobEffectInstance(MobEffects.BLINDNESS, (int)duration * 20, 1);
+            player.addEffect(blindnessEffect);
             return;
+        }
 
-        _deadPlayers.put(player.getStringUUID(), LocalDateTime.now().plusSeconds(GetRespawnTime(source)));
+        long respawnTime = GetRespawnTime(source);
+        MobEffectInstance blindnessEffect = new MobEffectInstance(MobEffects.BLINDNESS, (int)respawnTime * 20, 1);
+        player.addEffect(blindnessEffect);
+        player.awardStat(Stats.DEATHS);
+        player.resetStat(Stats.CUSTOM.get(Stats.TIME_SINCE_DEATH));
+        player.resetStat(Stats.CUSTOM.get(Stats.TIME_SINCE_REST));
+
+        _deadPlayers.put(player.getStringUUID(), LocalDateTime.now().plusSeconds(respawnTime));
     }
 
     public static void RespawnPlayer(ServerPlayer player, boolean isTemporal) {
-        if (isTemporal)
+        if (!isTemporal)
             _deadPlayers.remove(player.getStringUUID());
         player.setGameMode(GameType.SURVIVAL);
 
-        if (CONFIG().AllowHomeRespawn) {
-            player.respawn();
+        if (CONFIG().AllowHomeRespawn && player.getRespawnPosition() != null) {
+            var position = player.getRespawnPosition();
+            var dimension = player.getRespawnDimension();
+            var angle = player.getRespawnAngle();
+            var level = player.server.getLevel(dimension);
+            player.teleportTo(level, (double)position.getX(), (double)position.getY(), (double)position.getZ(), angle, angle);
+
         }
         else if (!CONFIG().AllowLocationRespawn) {
             var overworld = player.server.overworld();
-            player.setRespawnPosition(overworld.dimension(), overworld.getSharedSpawnPos(), overworld.getSharedSpawnAngle(),true, true);
-            player.respawn();
+            var position = overworld.getSharedSpawnPos();
+            player.teleportTo(overworld, (double)position.getX(), (double)position.getY(), (double)position.getZ(), overworld.getSharedSpawnAngle(), overworld.getSharedSpawnAngle());
         }
     }
 
