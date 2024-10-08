@@ -2,6 +2,9 @@ package io.github.tavstal.respawntimer;
 
 import io.github.tavstal.respawntimer.models.ConfigField;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CommonConfig {
     @ConfigField(order = 1, comment = "Shows more logs than usual. Helps locating errors.")
     public boolean EnableDebugMode;
@@ -21,7 +24,8 @@ public class CommonConfig {
     public  boolean AllowLocationRespawn;
     @ConfigField(order = 9, comment = "If the player has bed they will be respawned there, instead of at the world spawn")
     public boolean AllowHomeRespawn;
-
+    @ConfigField(order = 10, comment = "What items should be recognised as totems.")
+    public List<String> TotemIds;
     //#region Messages
     @ConfigField(order = 10, comment = "")
     public String DiedText;
@@ -29,7 +33,7 @@ public class CommonConfig {
     public String RespawnTimerMessage;
     @ConfigField(order = 12, comment = "")
     public String RespawnMessage;
-
+    //#endregion
     //#region Delays
     @ConfigField(order = 13, comment = "Any kind of arrow hitting something")
     public int ArrowDeathDuration;
@@ -129,8 +133,6 @@ public class CommonConfig {
     public int WitherSkullDeathDuration;
     //#endregion
 
-    //#endregion
-
     @ConfigField(order = 100, comment = "DO NOT TOUCH THIS. This helps handlig config related changes after updates.")
     public int FileVersion;
 
@@ -144,6 +146,13 @@ public class CommonConfig {
         DropInventory = false;
         AllowLocationRespawn = false;
         AllowHomeRespawn = true;
+
+        TotemIds = new ArrayList<>();
+        TotemIds.add("minecraft:totem_of_undying");
+        TotemIds.add("totemexpansion:totem_fire");
+        TotemIds.add("totemexpansion:totem_falling");
+        TotemIds.add("totemexpansion:totem_breathing");
+        TotemIds.add("totemexpansion:totem_explosion");
 
         DiedText = "§cYou died.";
         RespawnTimerMessage = "§cYou will respawn in {0}s.";

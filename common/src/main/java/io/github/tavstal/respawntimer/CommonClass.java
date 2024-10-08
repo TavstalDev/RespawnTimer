@@ -1,6 +1,9 @@
 package io.github.tavstal.respawntimer;
 
+import io.github.tavstal.respawntimer.commands.RespawnCommand;
 import io.github.tavstal.respawntimer.utils.ConfigUtils;
+import io.github.tavstal.respawntimer.utils.PlayerUtils;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -45,12 +48,14 @@ public class CommonClass {
         return _config;
     }
 
-    public static void init() {
+    public static void init(MinecraftServer server) {
         try {
             if (CONFIG().EnableDebugMode) {
                 SetLogLevel("DEBUG");
             }
 
+            var commandDispatcher = server.getCommands().getDispatcher();
+            RespawnCommand.register(commandDispatcher);
 
             LOG.info(MOD_NAME + " has been loaded.");
         }
@@ -112,6 +117,7 @@ public class CommonClass {
         if (!isTemporal)
             _deadPlayers.remove(player.getStringUUID());
         player.setGameMode(GameType.SURVIVAL);
+        player.removeAllEffects();
 
         if (CONFIG().AllowHomeRespawn && player.getRespawnPosition() != null) {
             var position = player.getRespawnPosition();
