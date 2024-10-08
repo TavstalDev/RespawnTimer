@@ -3,15 +3,17 @@ package io.github.tavstal.respawntimer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.entity.event.v1.ServerLivingEntityEvents;
 import net.fabricmc.fabric.api.entity.event.v1.ServerPlayerEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.server.network.ServerPlayerConnection;
 
 public class FabricMain implements ModInitializer {
     
     @Override
     public void onInitialize() {
-        CommonClass.init();
+        ServerLifecycleEvents.SERVER_STARTED.register((listener) -> CommonClass.init(listener));
 
         // Player Connected Event
         ServerPlayConnectionEvents.JOIN.register((handler, sender, client) -> CommonEvents.OnPlayerConnected(handler.player));

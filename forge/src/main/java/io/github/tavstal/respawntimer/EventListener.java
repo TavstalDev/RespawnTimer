@@ -3,9 +3,15 @@ package io.github.tavstal.respawntimer;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.event.entity.living.LivingDeathEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent;
+import net.minecraftforge.event.server.ServerStartedEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class EventListener {
+    @SubscribeEvent
+    public void onServerStart(ServerStartedEvent event) {
+        CommonClass.init(event.getServer());
+    }
+
     @SubscribeEvent
     public void onServerTick(TickEvent.ServerTickEvent event) {
         CommonEvents.OnServerTick(event.getServer());

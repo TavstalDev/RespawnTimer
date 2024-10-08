@@ -9,7 +9,6 @@ import net.neoforged.neoforge.common.NeoForge;
 public class NeoForgeMain {
 
     public NeoForgeMain(IEventBus eventBus) {
-        CommonClass.init();
         // Use Forge to bootstrap the Common mod.
         NeoForge.EVENT_BUS.register(new EventListener());
     }
