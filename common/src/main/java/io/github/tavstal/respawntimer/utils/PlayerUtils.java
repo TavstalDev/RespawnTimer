@@ -1,6 +1,9 @@
 package io.github.tavstal.respawntimer.utils;
 
 import io.github.tavstal.respawntimer.CommonClass;
+import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.game.ClientboundSetTitleTextPacket;
+import net.minecraft.network.protocol.game.ClientboundSetTitlesAnimationPacket;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
@@ -51,6 +54,22 @@ public class PlayerUtils {
 
         // Get the player's current team (returns null if no team is assigned)
         return scoreboard.getPlayersTeam(player.getName().getString());
+    }
+
+    public static void SendTitleMessage(ServerPlayer player, String mainTitle, String subTitle) {
+        // Create the title component
+        Component titleComponent = Component.literal(mainTitle);
+        Component subtitleComponent = Component.literal(subTitle);
+
+        // Create and send title packets
+        ClientboundSetTitleTextPacket titlePacket = new ClientboundSetTitleTextPacket(titleComponent);
+        ClientboundSetTitleTextPacket subtitlePacket = new ClientboundSetTitleTextPacket(subtitleComponent);
+       ClientboundSetTitlesAnimationPacket timingPacket = new ClientboundSetTitlesAnimationPacket(10, 70, 20);  // Fade-in, Stay, Fade-out
+
+        // Send packets to the player
+        player.connection.send(titlePacket);
+        player.connection.send(subtitlePacket);
+        player.connection.send(timingPacket);
     }
 }
 
