@@ -29,6 +29,6 @@ public class EventListener {
 
     @SubscribeEvent
     public  void onPlayerDeath(LivingDeathEvent event) {
-        CommonEvents.OnPlayerDeath(event.getEntity(), event.getSource());
+        event.setCanceled(!CommonEvents.OnPlayerDeath(event.getEntity(), event.getSource()));
     }
 }
