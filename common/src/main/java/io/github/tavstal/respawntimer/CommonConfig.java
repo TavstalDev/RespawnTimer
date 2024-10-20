@@ -25,7 +25,7 @@ public class CommonConfig {
     @ConfigField(order = 9, comment = "If the player has bed they will be respawned there, instead of at the world spawn")
     public boolean AllowHomeRespawn;
     @ConfigField(order = 10, comment = "What items should be recognised as totems.")
-    public List<String> TotemIds;
+    public String TotemIds;
     //#region Messages
     @ConfigField(order = 10, comment = "")
     public String DiedText;
@@ -147,12 +147,7 @@ public class CommonConfig {
         AllowLocationRespawn = false;
         AllowHomeRespawn = true;
 
-        TotemIds = new ArrayList<>();
-        TotemIds.add("minecraft:totem_of_undying");
-        TotemIds.add("totemexpansion:totem_fire");
-        TotemIds.add("totemexpansion:totem_falling");
-        TotemIds.add("totemexpansion:totem_breathing");
-        TotemIds.add("totemexpansion:totem_explosion");
+        TotemIds = "minecraft:totem_of_undying;totemexpansion:totem_fire;totemexpansion:totem_falling;totemexpansion:totem_breathing;totemexpansion:totem_explosion";
 
         DiedText = "§cYou died.";
         RespawnTimerMessage = "§cYou will respawn in {0}s.";
