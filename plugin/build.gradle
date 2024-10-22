@@ -31,5 +31,6 @@ tasks.withType(JavaCompile) {
 }
 
 shadowJar {
+    archiveBaseName.set("${mod_id}-${minecraft_version}")
     archiveClassifier.set('')
 }
