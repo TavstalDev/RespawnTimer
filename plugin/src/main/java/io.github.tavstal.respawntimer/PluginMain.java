@@ -18,7 +18,7 @@ public class PluginMain extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        CommonClass.init(((CraftServer)this.getServer()).getServer());
+        CommonClass.init(((CraftServer)this.getServer()).getServer(), true);
         this.getServer().getPluginManager().registerEvents(this, this);
     }
 

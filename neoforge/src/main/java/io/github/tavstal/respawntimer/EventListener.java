@@ -9,7 +9,7 @@ import net.neoforged.neoforge.event.tick.ServerTickEvent;
 public class EventListener {
     @SubscribeEvent
     public void onServerStart(ServerStartedEvent event) {
-        CommonClass.init(event.getServer());
+        CommonClass.init(event.getServer(), false);
     }
 
     @SubscribeEvent

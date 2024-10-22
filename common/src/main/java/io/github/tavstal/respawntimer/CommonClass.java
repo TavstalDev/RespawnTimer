@@ -31,6 +31,10 @@ public class CommonClass {
     public static final String MOD_ID = "respawntimer";
     public static final String MOD_NAME = "RespawnTImer";
     public static final Logger LOG = LoggerFactory.getLogger(MOD_NAME);
+    private static boolean _isPlugin;
+    public static boolean IsPlugin() {
+        return _isPlugin;
+    }
 
     private static Dictionary<String, LocalDateTime> _deadPlayers = new Hashtable<>();
 
@@ -48,8 +52,9 @@ public class CommonClass {
         return _config;
     }
 
-    public static void init(MinecraftServer server) {
+    public static void init(MinecraftServer server, boolean isPlugin) {
         try {
+            _isPlugin = isPlugin;
             if (CONFIG().EnableDebugMode) {
                 SetLogLevel("DEBUG");
             }
