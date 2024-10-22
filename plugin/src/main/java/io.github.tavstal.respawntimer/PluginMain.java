@@ -39,7 +39,7 @@ public class PluginMain extends JavaPlugin implements Listener {
     public void onPlayerDeath(PlayerDeathEvent event) {
         ServerPlayer mcPlayer = ((CraftPlayer) event.getPlayer()).getHandle();
         DamageSource source = ((CraftDamageSource)event.getDamageSource()).getHandle();
-        CommonEvents.OnPlayerDeath(mcPlayer, source);
+        event.setCancelled(!CommonEvents.OnPlayerDeath(mcPlayer, source));
     }
 
     @EventHandler
