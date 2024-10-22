@@ -29,6 +29,11 @@ public class PluginPlatformHelper implements IPlatformHelper {
     }
 
     @Override
+    public boolean isPlugin() {
+        return true;
+    }
+
+    @Override
     public boolean isDevelopmentEnvironment() {
 
         return false;

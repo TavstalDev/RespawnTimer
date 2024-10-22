@@ -30,6 +30,11 @@ public class FabricPlatformHelper implements IPlatformHelper {
     }
 
     @Override
+    public boolean isPlugin() {
+        return false;
+    }
+
+    @Override
     public boolean isDevelopmentEnvironment() {
 
         return FabricLoader.getInstance().isDevelopmentEnvironment();

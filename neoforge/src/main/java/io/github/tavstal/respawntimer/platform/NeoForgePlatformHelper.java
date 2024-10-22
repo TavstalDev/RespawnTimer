@@ -31,6 +31,11 @@ public class NeoForgePlatformHelper implements IPlatformHelper {
     }
 
     @Override
+    public boolean isPlugin() {
+        return false;
+    }
+
+    @Override
     public boolean isDevelopmentEnvironment() {
 
         return !FMLLoader.isProduction();

@@ -4,6 +4,7 @@ import com.electronwill.nightconfig.core.file.CommentedFileConfig;
 import io.github.tavstal.respawntimer.CommonClass;
 import io.github.tavstal.respawntimer.CommonConfig;
 import io.github.tavstal.respawntimer.models.ConfigField;
+import io.github.tavstal.respawntimer.platform.Services;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -16,7 +17,7 @@ import java.util.List;
 
 public class ConfigUtils {
     private  static final String minecraftRootPath = System.getProperty("user.dir");
-    private static final Path configFilePath = Paths.get(minecraftRootPath, "config", "respawn-timer.toml");
+    private static final Path configFilePath = Services.PLATFORM.isPlugin() ? Paths.get(minecraftRootPath, "plugins", "RespawnTimer", "respawn-timer.toml") : Paths.get(minecraftRootPath, "config", "respawn-timer.toml");
 
     public static CommonConfig LoadConfig() {
         try {
