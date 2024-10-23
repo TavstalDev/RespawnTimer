@@ -1,5 +1,4 @@
 plugins {
-    id 'multiloader-loader'
     id 'java'
     id("io.papermc.paperweight.userdev") version "1.7.3"
     id("xyz.jpenilla.run-paper") version "2.3.1" // Adds runServer and runMojangMappedServer tasks for testing
@@ -14,6 +13,7 @@ java {
 
 dependencies {
     paperweight.paperDevBundle("${minecraft_version}-${paper_version}")
+    implementation project(":common")
 
     // Night Config
     implementation "com.electronwill.night-config:toml:3.7.1"

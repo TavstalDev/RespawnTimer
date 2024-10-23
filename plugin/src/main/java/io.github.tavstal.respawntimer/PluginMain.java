@@ -1,14 +1,14 @@
 package io.github.tavstal.respawntimer;
 
 import com.destroystokyo.paper.event.server.ServerTickEndEvent;
-import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
-import org.bukkit.craftbukkit.CraftServer;
-import org.bukkit.craftbukkit.damage.CraftDamageSource;
-import org.bukkit.craftbukkit.entity.CraftPlayer;
+import org.bukkit.Bukkit;
+import org.bukkit.craftbukkit.v1_20_R1.CraftServer;
+import org.bukkit.craftbukkit.v1_20_R1.entity.CraftPlayer;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.PlayerDeathEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
@@ -18,7 +18,7 @@ public class PluginMain extends JavaPlugin implements Listener {
 
     @Override
     public void onEnable() {
-        CommonClass.init(((CraftServer)this.getServer()).getServer(), true);
+        CommonClass.init(((CraftServer)Bukkit.getServer()).getServer(), true);
         this.getServer().getPluginManager().registerEvents(this, this);
     }
 
@@ -38,7 +38,7 @@ public class PluginMain extends JavaPlugin implements Listener {
     @EventHandler
     public void onPlayerDeath(PlayerDeathEvent event) {
         ServerPlayer mcPlayer = ((CraftPlayer) event.getPlayer()).getHandle();
-        DamageSource source = ((CraftDamageSource)event.getDamageSource()).getHandle();
+        DamageSource source = mcPlayer.getLastDamageSource();
         event.setCancelled(!CommonEvents.OnPlayerDeath(mcPlayer, source));
     }
 
