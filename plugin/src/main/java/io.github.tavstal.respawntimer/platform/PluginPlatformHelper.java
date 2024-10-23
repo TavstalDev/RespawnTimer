@@ -1,42 +1,41 @@
 package io.github.tavstal.respawntimer.platform;
 
 import io.github.tavstal.respawntimer.platform.services.IPlatformHelper;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.loader.api.FabricLoader;
 
-public class FabricPlatformHelper implements IPlatformHelper {
+public class PluginPlatformHelper implements IPlatformHelper {
 
     @Override
     public String getPlatformName() {
-        return "Fabric";
+        return "Paper";
     }
 
+    // Note: plugin is always server side
     @Override
     public boolean isClientSide() {
 
-        return FabricLoader.getInstance().getEnvironmentType() == EnvType.CLIENT;
+        return false;
     }
 
     @Override
     public boolean isServerSide() {
 
-        return FabricLoader.getInstance().getEnvironmentType() == EnvType.SERVER;
+        return true;
     }
 
     @Override
     public boolean isModLoaded(String modId) {
 
-        return FabricLoader.getInstance().isModLoaded(modId);
+        return false;
     }
 
     @Override
     public boolean isPlugin() {
-        return false;
+        return true;
     }
 
     @Override
     public boolean isDevelopmentEnvironment() {
 
-        return FabricLoader.getInstance().isDevelopmentEnvironment();
+        return false;
     }
 }

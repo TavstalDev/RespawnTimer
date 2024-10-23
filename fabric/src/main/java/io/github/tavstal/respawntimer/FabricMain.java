@@ -13,7 +13,7 @@ public class FabricMain implements ModInitializer {
     
     @Override
     public void onInitialize() {
-        ServerLifecycleEvents.SERVER_STARTED.register((listener) -> CommonClass.init(listener));
+        ServerLifecycleEvents.SERVER_STARTED.register((listener) -> CommonClass.init(listener, false));
 
         // Player Connected Event
         ServerPlayConnectionEvents.JOIN.register((handler, sender, client) -> CommonEvents.OnPlayerConnected(handler.player));

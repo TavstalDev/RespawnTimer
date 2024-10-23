@@ -30,6 +30,12 @@ public interface IPlatformHelper {
     boolean isServerSide();
 
     /**
+     *
+     * @return True if the project is a plugin, false if it is a mod
+     */
+    boolean isPlugin();
+
+    /**
      * Check if the game is currently in a development environment.
      *
      * @return True if in a development environment, false otherwise.

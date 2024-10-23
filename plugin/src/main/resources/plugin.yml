@@ -1,0 +1,7 @@
+name: RespawnTimer
+version: 1.0.0
+main: io.github.tavstal.respawntimer.PluginMain
+description: A basic minecraft mod that punishes the player with different respawn timers based on their death cause.
+author: Tavstal
+website: https://github.com/TavstalDev/RespawnTimer
+api-version: '1.21.1'

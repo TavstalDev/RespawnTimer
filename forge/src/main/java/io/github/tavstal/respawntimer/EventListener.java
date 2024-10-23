@@ -9,7 +9,7 @@ import net.minecraftforge.eventbus.api.SubscribeEvent;
 public class EventListener {
     @SubscribeEvent
     public void onServerStart(ServerStartedEvent event) {
-        CommonClass.init(event.getServer());
+        CommonClass.init(event.getServer(), false);
     }
 
     @SubscribeEvent

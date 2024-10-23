@@ -3,18 +3,11 @@ package io.github.tavstal.respawntimer;
 import io.github.tavstal.respawntimer.utils.EntityUtils;
 import io.github.tavstal.respawntimer.utils.ModUtils;
 import io.github.tavstal.respawntimer.utils.PlayerUtils;
-import net.minecraft.advancements.CriteriaTriggers;
-import net.minecraft.network.chat.ChatType;
-import net.minecraft.network.protocol.status.ServerStatus;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.level.GameType;
-import org.apache.commons.compress.harmony.pack200.CPLong;
-import org.spongepowered.tools.obfuscation.interfaces.IMessagerEx;
 
 import java.text.MessageFormat;
 import java.time.Duration;
