@@ -1,6 +1,8 @@
 package io.github.tavstal.respawntimer.platform;
 
 import io.github.tavstal.respawntimer.platform.services.IPlatformHelper;
+import net.minecraft.server.level.ServerPlayer;
+import org.bukkit.craftbukkit.entity.CraftPlayer;
 
 public class PluginPlatformHelper implements IPlatformHelper {
 
@@ -37,5 +39,11 @@ public class PluginPlatformHelper implements IPlatformHelper {
     public boolean isDevelopmentEnvironment() {
 
         return false;
+    }
+
+    @Override
+    public boolean hasPermission(ServerPlayer player, String permission) {
+        CraftPlayer craftPlayer = player.getBukkitEntity();
+        return  craftPlayer.hasPermission(permission);
     }
 }

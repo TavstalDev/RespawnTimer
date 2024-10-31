@@ -3,6 +3,7 @@ package io.github.tavstal.respawntimer.platform;
 import io.github.tavstal.respawntimer.platform.services.IPlatformHelper;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.server.level.ServerPlayer;
 
 public class FabricPlatformHelper implements IPlatformHelper {
 
@@ -38,5 +39,10 @@ public class FabricPlatformHelper implements IPlatformHelper {
     public boolean isDevelopmentEnvironment() {
 
         return FabricLoader.getInstance().isDevelopmentEnvironment();
+    }
+
+    @Override
+    public boolean hasPermission(ServerPlayer player, String permission) {
+        return  player.hasPermissions(4);
     }
 }

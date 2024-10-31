@@ -1,7 +1,7 @@
 package io.github.tavstal.respawntimer;
 
 import io.github.tavstal.respawntimer.utils.EntityUtils;
-import io.github.tavstal.respawntimer.utils.ModUtils;
+import io.github.tavstal.respawntimer.utils.LocaleUtils;
 import io.github.tavstal.respawntimer.utils.PlayerUtils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -9,7 +9,6 @@ import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 
-import java.text.MessageFormat;
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.Collections;
@@ -71,13 +70,13 @@ public class CommonEvents {
             player.getServer().getPlayerList().broadcastSystemMessage(damageSource.getLocalizedDeathMessage(player), false);
 
             if (CommonClass.CONFIG().EnableChatMessages) {
-                player.sendSystemMessage(ModUtils.Literal(CommonClass.CONFIG().DiedText));
+                player.sendSystemMessage(LocaleUtils.GetLocaleCompPrefix("messages.died"));
             }
             if (CommonClass.CONFIG().EnableTitleScreen) {
-                PlayerUtils.SendTitleMessage(player, CommonClass.CONFIG().DiedText, CommonClass.CONFIG().DiedText, 5);
+                PlayerUtils.SendTitleMessage(player, LocaleUtils.GetLocale("messages.died"), LocaleUtils.GetLocale("messages.died"), 5);
             }
             if (CommonClass.CONFIG().EnableActionBarMessage) {
-                player.displayClientMessage(ModUtils.Literal(CommonClass.CONFIG().DiedText), true);
+                player.displayClientMessage(LocaleUtils.GetLocaleComp("messages.died"), true);
             }
 
             return false;
@@ -108,27 +107,26 @@ public class CommonEvents {
                 CommonClass.RespawnPlayer(player, false);
 
                 if (CommonClass.CONFIG().EnableChatMessages) {
-                    player.sendSystemMessage(ModUtils.Literal(CommonClass.CONFIG().RespawnMessage));
+                    player.sendSystemMessage(LocaleUtils.GetLocaleCompPrefix("messages.respawned"));
                 }
                 if (CommonClass.CONFIG().EnableTitleScreen) {
-                    PlayerUtils.SendTitleMessage(player, "", CommonClass.CONFIG().RespawnMessage, 5);
+                    PlayerUtils.SendTitleMessage(player, "", LocaleUtils.GetLocale("messages.respawned"), 5);
                 }
                 if (CommonClass.CONFIG().EnableActionBarMessage) {
-                    player.displayClientMessage(ModUtils.Literal(CommonClass.CONFIG().RespawnMessage), true);
+                    player.displayClientMessage(LocaleUtils.GetLocaleComp("messages.respawned"), true);
                 }
 
                 continue;
             }
 
-            String respawningText = MessageFormat.format(CommonClass.CONFIG().RespawnTimerMessage, duration);
             if (CommonClass.CONFIG().EnableChatMessages) {
-                player.sendSystemMessage(ModUtils.Literal(respawningText));
+                player.sendSystemMessage(LocaleUtils.GetLocaleCompPrefix("messages.respawning", duration));
             }
             if (CommonClass.CONFIG().EnableTitleScreen) {
-                PlayerUtils.SendTitleMessage(player, CommonClass.CONFIG().DiedText, respawningText, 0);
+                PlayerUtils.SendTitleMessage(player, LocaleUtils.GetLocale("messages.died"), LocaleUtils.GetLocale("messages.respawning", duration), 0);
             }
             if (CommonClass.CONFIG().EnableActionBarMessage) {
-                player.displayClientMessage(ModUtils.Literal(respawningText), true);
+                player.displayClientMessage(LocaleUtils.GetLocaleComp("messages.respawning", duration), true);
             }
 
         }

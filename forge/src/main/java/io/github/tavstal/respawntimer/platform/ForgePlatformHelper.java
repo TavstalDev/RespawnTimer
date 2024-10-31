@@ -1,6 +1,7 @@
 package io.github.tavstal.respawntimer.platform;
 
 import io.github.tavstal.respawntimer.platform.services.IPlatformHelper;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.common.ForgeMod;
 import net.minecraftforge.fml.ModList;
 import net.minecraftforge.fml.loading.FMLLoader;
@@ -40,5 +41,10 @@ public class ForgePlatformHelper implements IPlatformHelper {
     public boolean isDevelopmentEnvironment() {
 
         return !FMLLoader.isProduction();
+    }
+
+    @Override
+    public boolean hasPermission(ServerPlayer player, String permission) {
+        return  player.hasPermissions(4);
     }
 }

@@ -1,0 +1,11 @@
+{
+  "general": {
+    "prefix": "§8[§bRespawn§3Timer§8]§r ",
+    "noPermission": "§cYou do not have permission to do that."
+  },
+  "messages": {
+    "died": "§cYou died.",
+    "respawning": "§cYou will respawn in {0}s.",
+    "respawned": "§aYou have respawned."
+  }
+}

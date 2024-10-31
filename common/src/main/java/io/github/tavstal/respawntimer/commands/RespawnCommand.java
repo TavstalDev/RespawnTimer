@@ -11,9 +11,7 @@ import net.minecraft.server.level.ServerPlayer;
 
 public class RespawnCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher){
-        dispatcher.register(Commands.literal("respawn").executes((command) -> {
-            return execute(command);
-        }));
+        dispatcher.register(Commands.literal("respawn").executes(RespawnCommand::execute));
     }
     private static int execute(CommandContext<CommandSourceStack> command){
         try {

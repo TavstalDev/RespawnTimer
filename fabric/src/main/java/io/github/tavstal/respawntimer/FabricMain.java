@@ -21,7 +21,7 @@ public class FabricMain implements ModInitializer {
         // Player Disconnected Event
         ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> CommonEvents.OnPlayerDisconnected(handler.player));
 
-        ServerTickEvents.START_SERVER_TICK.register((server) -> CommonEvents.OnServerTick(server));
+        ServerTickEvents.START_SERVER_TICK.register(CommonEvents::OnServerTick);
 
         // Player Death
         ServerLivingEntityEvents.ALLOW_DEATH.register((entity, damageSource, damageAmount) -> CommonEvents.OnPlayerDeath(entity, damageSource));

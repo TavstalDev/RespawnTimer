@@ -2,6 +2,7 @@ package io.github.tavstal.respawntimer;
 
 import io.github.tavstal.respawntimer.commands.RespawnCommand;
 import io.github.tavstal.respawntimer.utils.ConfigUtils;
+import io.github.tavstal.respawntimer.utils.LocaleUtils;
 import io.github.tavstal.respawntimer.utils.PlayerUtils;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerPlayer;
@@ -27,37 +28,83 @@ import java.util.Hashtable;
 import static net.minecraft.world.damagesource.DamageTypes.*;
 
 public class CommonClass {
-
+    /** The unique identifier for the mod. */
     public static final String MOD_ID = "respawntimer";
+    /** The display name of the mod. */
     public static final String MOD_NAME = "RespawnTImer";
+    /** Logger instance for logging messages related to the mod. */
     public static final Logger LOG = LoggerFactory.getLogger(MOD_NAME);
+    /**
+     * Indicates whether the mod is running as a plugin.
+     */
     private static boolean _isPlugin;
+    /**
+     * Checks if the mod is running as a plugin.
+     *
+     * @return {@code true} if the mod is a plugin; {@code false} otherwise.
+     */
     public static boolean IsPlugin() {
         return _isPlugin;
     }
 
-    private static Dictionary<String, LocalDateTime> _deadPlayers = new Hashtable<>();
+    private final static Dictionary<String, LocalDateTime> _deadPlayers = new Hashtable<>();
 
     public static Dictionary<String, LocalDateTime> GetPlayerDataList() {
         return _deadPlayers;
     }
 
+    /**
+     * Holds the configuration settings for the mod.
+     * This instance is initialized to {@code null} until the configuration is loaded.
+     */
     private static CommonConfig _config = null;
 
+    /**
+     * Retrieves the singleton instance of {@link CommonConfig} for global configuration access.
+     * <p>
+     * This method provides a central point to access the configuration settings
+     * across the application, ensuring a consistent state is used throughout.
+     * </p>
+     *
+     * @return The {@link CommonConfig} instance containing current configuration values.
+     */
     public static CommonConfig CONFIG() {
         if (_config == null) {
-            _config = ConfigUtils.LoadConfig();
-            LOG.debug("Config null ? " + (_config == null));
+            _config = ConfigUtils.loadConfig();
         }
         return _config;
     }
 
+    /**
+     * Updates the configuration settings with the provided values.
+     *
+     * @param newValue an instance of {@code CommonConfig} containing the updated configuration values.
+     */
+    public static void UpdateConfig(CommonConfig newValue) {
+        _config = newValue;
+        ConfigUtils.saveConfig(newValue);
+    }
+
+    /**
+     * Initializes the mod or plugin with the given server instance and mode.
+     * <p>
+     * This method sets up necessary configurations or states for the provided
+     * {@code MinecraftServer} instance, depending on whether the initialization is
+     * for a plugin or mod.
+     * </p>
+     *
+     * @param server    The {@link MinecraftServer} instance to initialize, providing access
+     *                  to server resources, configurations, and management functions.
+     * @param isPlugin  A {@code boolean} indicating if the initialization is for a plugin
+     *                  ({@code true}) or for a standalone setup ({@code false}).
+     */
     public static void init(MinecraftServer server, boolean isPlugin) {
         try {
             _isPlugin = isPlugin;
             if (CONFIG().EnableDebugMode) {
                 SetLogLevel("DEBUG");
             }
+            LocaleUtils.init();
 
             var commandDispatcher = server.getCommands().getDispatcher();
             RespawnCommand.register(commandDispatcher);
@@ -70,6 +117,17 @@ public class CommonClass {
         }
     }
 
+    /**
+     * Sets the logging level for the application.
+     * <p>
+     * This method configures the application's logging output based on the specified {@code level}.
+     * Acceptable values may include levels like "DEBUG", "INFO", "WARN", and "ERROR",
+     * depending on the logging framework used.
+     * </p>
+     *
+     * @param level The desired logging level as a {@link String}. Valid levels are typically
+     *              "DEBUG", "INFO", "WARN", "ERROR", etc.
+     */
     private static void SetLogLevel(String level) {
         try {
             // Set the logging level for the logger

@@ -4,6 +4,6 @@ import java.lang.annotation.Retention;
 import java.lang.annotation.RetentionPolicy;
 
 @Retention(RetentionPolicy.RUNTIME)
-public @interface ConfigField {
-    String comment() default "";
+public @interface ValueEditor {
+    EFieldType type();
 }

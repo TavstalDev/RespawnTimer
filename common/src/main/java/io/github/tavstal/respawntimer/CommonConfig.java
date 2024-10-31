@@ -1,143 +1,194 @@
 package io.github.tavstal.respawntimer;
 
 import io.github.tavstal.respawntimer.models.ConfigField;
-
-import java.util.ArrayList;
-import java.util.List;
+import io.github.tavstal.respawntimer.models.EFieldType;
+import io.github.tavstal.respawntimer.models.ValueEditor;
 
 public class CommonConfig {
-    @ConfigField(order = 1, comment = "Shows more logs than usual. Helps locating errors.")
+    @ConfigField(comment = "Shows more logs than usual. Helps locating errors.")
     public boolean EnableDebugMode;
-    @ConfigField(order = 2, comment = "Messages related to respawning will be sent to the title screen.")
+    @ConfigField(comment = "Specifies the language used by the application.")
+    public String Language;
+    @ConfigField(comment = "Messages related to respawning will be sent to the title screen.")
+    @ValueEditor(type = EFieldType.BOOLEAN)
     public  boolean EnableTitleScreen;
-    @ConfigField(order = 3, comment = "Messages related to respawning will be sent to the chat.")
+    @ConfigField(comment = "Messages related to respawning will be sent to the chat.")
+    @ValueEditor(type = EFieldType.BOOLEAN)
     public boolean EnableChatMessages;
-    @ConfigField(order = 4, comment = "Messages related to respawning will be sent to above the action bar.")
+    @ConfigField(comment = "Messages related to respawning will be sent to above the action bar.")
+    @ValueEditor(type = EFieldType.BOOLEAN)
     public boolean EnableActionBarMessage;
-    @ConfigField(order = 5, comment = "Ignores the players who died in creative mode.")
+    @ConfigField(comment = "Ignores the players who died in creative mode.")
+    @ValueEditor(type = EFieldType.BOOLEAN)
     public boolean IgnoreCreativePlayers;
-    @ConfigField(order = 6, comment = "Clears the items of the player on death.")
+    @ConfigField(comment = "Clears the items of the player on death.")
+    @ValueEditor(type = EFieldType.BOOLEAN)
     public boolean ClearInventory;
-    @ConfigField(order = 7, comment = "Drops the items of the player on death.")
+    @ConfigField(comment = "Drops the items of the player on death.")
+    @ValueEditor(type = EFieldType.BOOLEAN)
     public boolean DropInventory;
-    @ConfigField(order = 8, comment = "Allows the player to respawn at their death location if they do not have home.")
+    @ConfigField(comment = "Allows the player to respawn at their death location if they do not have home.")
+    @ValueEditor(type = EFieldType.BOOLEAN)
     public  boolean AllowLocationRespawn;
-    @ConfigField(order = 9, comment = "If the player has bed they will be respawned there, instead of at the world spawn")
+    @ConfigField(comment = "If the player has bed they will be respawned there, instead of at the world spawn")
+    @ValueEditor(type = EFieldType.BOOLEAN)
     public boolean AllowHomeRespawn;
-    @ConfigField(order = 10, comment = "What items should be recognised as totems.")
+    @ConfigField(comment = "What items should be recognised as totems.")
+    @ValueEditor(type = EFieldType.TEXT)
     public String TotemIds;
-    //#region Messages
-    @ConfigField(order = 10, comment = "")
-    public String DiedText;
-    @ConfigField(order = 11, comment = "")
-    public String RespawnTimerMessage;
-    @ConfigField(order = 12, comment = "")
-    public String RespawnMessage;
-    //#endregion
     //#region Delays
-    @ConfigField(order = 13, comment = "Any kind of arrow hitting something")
+    @ConfigField(comment = "Any kind of arrow hitting something")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int ArrowDeathDuration;
-    @ConfigField(order = 14, comment = "Explosion caused by using a bed or respawn anchor in the wrong dimension")
+    @ConfigField(comment = "Explosion caused by using a bed or respawn anchor in the wrong dimension")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int BadRespawnPointDeathDuration;
-    @ConfigField(order = 15, comment = "Touching a cactus")
+    @ConfigField(comment = "Touching a cactus")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int CactusDeathDuration;
-    @ConfigField(order = 16, comment = "Touching a campfire or soul campfire")
+    @ConfigField(comment = "Touching a campfire or soul campfire")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int CampfireDeathDuration;
-    @ConfigField(order = 17, comment = "When too many mobs are in one place")
+    @ConfigField(comment = "When too many mobs are in one place")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int CrammingDeathDuration;
-    @ConfigField(order = 18, comment = "Unused")
+    @ConfigField(comment = "Unused")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int DragonBreathDeathDuration;
-    @ConfigField(order = 19, comment = "Snow golems, blazes, endermen, and striders in water/rain")
+    @ConfigField(comment = "Snow golems, blazes, endermen, and striders in water/rain")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int DrownDeathDuration;
-    @ConfigField(order = 20, comment = "When dolphins and axolotls are out of water for too long")
+    @ConfigField(comment = "When dolphins and axolotls are out of water for too long")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int DryOutDeathDuration;
-    @ConfigField(order = 21, comment = "(1.21.2) Teleporting with an ender pearl")
+    @ConfigField(comment = "(1.21.2) Teleporting with an ender pearl")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int EnderPearlDeathDuration;
-    @ConfigField(order = 22, comment = "TNT exploding when its fuse runs out")
+    @ConfigField(comment = "TNT exploding when its fuse runs out")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int ExplosionDeathDuration;
-    @ConfigField(order = 23, comment = "Falling too far")
+    @ConfigField(comment = "Falling too far")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int FallDeathDuration;
-    @ConfigField(order = 24, comment = "A falling anvil hits something")
+    @ConfigField(comment = "A falling anvil hits something")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int FallingAnvilDeathDuration;
-    @ConfigField(order = 25, comment = "A non-anvil, non-dripstone falling block hitting an entity")
+    @ConfigField(comment = "A non-anvil, non-dripstone falling block hitting an entity")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int FallingBlockDeathDuration;
-    @ConfigField(order = 26, comment = "Falling pointed dripstone hitting something")
+    @ConfigField(comment = "Falling pointed dripstone hitting something")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int FallingStalactiteDeathDuration;
-    @ConfigField(order = 27, comment = "A ghast or blaze fireball with an owner hitting an entity directly")
+    @ConfigField(comment = "A ghast or blaze fireball with an owner hitting an entity directly")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int FireballDeathDuration;
-    @ConfigField(order = 28, comment = "An elytra user when their firework explodes")
+    @ConfigField(comment = "An elytra user when their firework explodes")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int FireworksDeathDuration;
-    @ConfigField(order = 29, comment = "Colliding with terrain using an elytra")
+    @ConfigField(comment = "Colliding with terrain using an elytra")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int FlyIntoWallDeathDuration;
-    @ConfigField(order = 30, comment = "Ticking damage while freezing in powder snow")
+    @ConfigField(comment = "Ticking damage while freezing in powder snow")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int FreezeDeathDuration;
-    @ConfigField(order = 31, comment = "Simulating the player_hurt_entity trigger when punching an interaction entity")
+    @ConfigField(comment = "Simulating the player_hurt_entity trigger when punching an interaction entity")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int GenericDeathDuration;
-    @ConfigField(order = 32, comment = "Using /kill")
+    @ConfigField(comment = "Using /kill")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int GenericKillDeathDuration;
-    @ConfigField(order = 33, comment = "Standing on a magma block")
+    @ConfigField(comment = "Standing on a magma block")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int HotFloorDeathDuration;
-    @ConfigField(order = 34, comment = "Ticking damage while standing in a fire or soul fire block")
+    @ConfigField(comment = "Ticking damage while standing in a fire or soul fire block")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int InFireDeathDuration;
-    @ConfigField(order = 35, comment = "Ticking damage while suffocating")
+    @ConfigField(comment = "Ticking damage while suffocating")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int InWallDeathDuration;
-    @ConfigField(order = 36, comment = "Instant damage from a harming/healing potion (drink, splash, or lingering)")
+    @ConfigField(comment = "Instant damage from a harming/healing potion (drink, splash, or lingering)")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int IndirectMagicDeathDuration;
-    @ConfigField(order = 37, comment = "Ticking damage while in lava")
+    @ConfigField(comment = "Ticking damage while in lava")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int LavaDeathDuration;
-    @ConfigField(order = 38, comment = "When struck by lightning")
+    @ConfigField(comment = "When struck by lightning")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int LightningDeathDuration;
-    @ConfigField(order = 39, comment = "When hit by a mace smash attack")
+    @ConfigField(comment = "When hit by a mace smash attack")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int MaceSmashDeathDuration;
-    @ConfigField(order = 40, comment = "Ticking damage from a Harming/Healing effect (i.e. not initial contact)")
+    @ConfigField(comment = "Ticking damage from a Harming/Healing effect (i.e. not initial contact)")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int MagicDeathDuration;
-    @ConfigField(order = 41, comment = "Melee attack dealt by most mobs")
+    @ConfigField(comment = "Melee attack dealt by most mobs")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int MobDeathDuration;
-    @ConfigField(order = 42, comment = "A goat ramming")
+    @ConfigField(comment = "A goat ramming")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int MobNoAggroDeathDuration;
-    @ConfigField(order = 43, comment = "A shulker bullet hitting something")
+    @ConfigField(comment = "A shulker bullet hitting something")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int MobProjectileDeathDuration;
-    @ConfigField(order = 44, comment = "Ticking damage while fire is wearing off")
+    @ConfigField(comment = "Ticking damage while fire is wearing off")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int OnFireDeathDuration;
-    @ConfigField(order = 45, comment = "Ticking damage in the void")
+    @ConfigField(comment = "Ticking damage in the void")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int OutOfWorldDeathDuration;
-    @ConfigField(order = 46, comment = "Ticking damage while outside the world border")
+    @ConfigField(comment = "Ticking damage while outside the world border")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int OutsideBorderDeathDuration;
-    @ConfigField(order = 47, comment = "A player hitting a mob")
+    @ConfigField(comment = "A player hitting a mob")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int PlayerAttackDeathDuration;
-    @ConfigField(order = 48, comment = "Anything in explosion, when it can be determined a player was directly responsible")
+    @ConfigField(comment = "Anything in explosion, when it can be determined a player was directly responsible")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int PlayerExplosionDeathDuration;
-    @ConfigField(order = 49, comment = "The ranged attack of a warden")
+    @ConfigField(comment = "The ranged attack of a warden")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int SonicBoomDeathDuration;
-    @ConfigField(order = 50, comment = "A llama spitting")
+    @ConfigField(comment = "A llama spitting")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int SpitDeathDuration;
-    @ConfigField(order = 51, comment = "Falling too far onto pointed dripstone")
+    @ConfigField(comment = "Falling too far onto pointed dripstone")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int StalagmiteDeathDuration;
-    @ConfigField(order = 52, comment = "Ticking damage from having no food")
+    @ConfigField(comment = "Ticking damage from having no food")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int StarveDeathDuration;
-    @ConfigField(order = 53, comment = "Melee attack dealt by a bee")
+    @ConfigField(comment = "Melee attack dealt by a bee")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int StingDeathDuration;
-    @ConfigField(order = 54, comment = "Ticking damage while moving in a berry bush block")
+    @ConfigField(comment = "Ticking damage while moving in a berry bush block")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int BushDeathDuration;
-    @ConfigField(order = 55, comment = "Recoil damage from attacking a guardian")
+    @ConfigField(comment = "Recoil damage from attacking a guardian")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int ThornsDeathDuration;
-    @ConfigField(order = 56, comment = "A snowball, egg, or ender pearl hitting something")
+    @ConfigField(comment = "A snowball, egg, or ender pearl hitting something")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int ThrownDeathDuration;
-    @ConfigField(order = 57, comment = "A trident hitting something")
+    @ConfigField(comment = "A trident hitting something")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int TridentDeathDuration;
-    @ConfigField(order = 58, comment = "A wind charge, thrown or fire from a breeze, hitting something")
+    @ConfigField(comment = "A wind charge, thrown or fire from a breeze, hitting something")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int WindChargeDeathDuration;
-    @ConfigField(order = 59, comment = "Ticking damage from a Wither effect")
+    @ConfigField(comment = "Ticking damage from a Wither effect")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int WitherDeathDuration;
-    @ConfigField(order = 60, comment = "A wither skull with an owner hitting something")
+    @ConfigField(comment = "A wither skull with an owner hitting something")
+    @ValueEditor(type = EFieldType.NUMBER)
     public int WitherSkullDeathDuration;
     //#endregion
 
-    @ConfigField(order = 100, comment = "DO NOT TOUCH THIS. This helps handlig config related changes after updates.")
+    @ConfigField(comment = "DO NOT TOUCH THIS. This helps handlig config related changes after updates.")
     public int FileVersion;
 
     public CommonConfig() {
         EnableDebugMode = false;
+        Language = "en";
         EnableTitleScreen = true;
         EnableActionBarMessage = false;
         EnableChatMessages = false;
@@ -147,11 +198,8 @@ public class CommonConfig {
         AllowLocationRespawn = false;
         AllowHomeRespawn = true;
 
-        TotemIds = "minecraft:totem_of_undying;totemexpansion:totem_fire;totemexpansion:totem_falling;totemexpansion:totem_breathing;totemexpansion:totem_explosion";
-
-        DiedText = "§cYou died.";
-        RespawnTimerMessage = "§cYou will respawn in {0}s.";
-        RespawnMessage = "§aYou have respawned.";
+        TotemIds =
+        "minecraft:totem_of_undying;totemexpansion:totem_fire;totemexpansion:totem_falling;totemexpansion:totem_breathing;totemexpansion:totem_explosion";
 
         ArrowDeathDuration = 120;
         BadRespawnPointDeathDuration = 10;
