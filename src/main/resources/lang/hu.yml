@@ -1,0 +1,7 @@
+General:
+  Prefix: "&bRespawn&3Timer &8»&r",
+  NoPermission: "%prefix% &cNincs jogod hogy használd."
+Died: "&cMeghaltál.",
+Respawning: "&cÚjraéledes %time%.",
+Respawned: "&aÚjraéledtél."
+Time: "%2.d:%2.d",
