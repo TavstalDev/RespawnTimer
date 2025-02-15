@@ -1,0 +1,133 @@
+#
+locale: en
+# Shows more logs than usual. Helps to locate errors.
+debug: false
+# Messages related to respawning will be sent to the title screen.
+enableTitleScreen: true
+# Messages related to respawning will be sent to above the action bar.
+enableActionBarMessage: false
+# Messages related to respawning will be sent to the chat.
+enableChatMessages: false
+# Ignores the players who died in creative mode.
+ignoreCreativePlayers: true
+# Clears the items of the player on death.
+clearInventory: false
+# Drops the items of the player on death.
+dropInventory: false
+# Allows the player to respawn at their death location if they do not have home.
+allowLocationRespawn: false
+# If the player has bed they will be respawned there, instead of at the world spawn.
+allowHomeRespawn: true
+deathSound: "LIGHTNING_BOLT_THUNDER"
+
+# What items should be recognised as totems.
+totemIds:
+  - "minecraft:totem_of_undying"
+  - "totemexpansion:totem_fire"
+  - "totemexpansion:totem_falling"
+  - "totemexpansion:totem_breathing"
+  - "totemexpansion:totem_explosion"
+
+
+# The duration of the respawn timer for each death cause.
+# The duration is in seconds.
+durations:
+  # Any kind of arrow hitting something
+  arrowDeathDuration: 120
+  # Explosion caused by using a bed or respawn anchor in the wrong dimension
+  badRespawnPointDeathDuration: 10
+  # Touching a cactus
+  cactusDeathDuration: 300
+  # Touching a campfire or soul campfire
+  campfireDeathDuration: 300
+  # When too many mobs are in one place
+  crammingDeathDuration: 20
+  #
+  dragonBreathDeathDuration: 120
+  #  Snow golems, blazes, endermen, and striders in water/rain
+  drownDeathDuration: 300
+  # When dolphins and axolotls are out of water for too long
+  dryOutDeathDuration: 300
+  # (1.21.2) Teleporting with an ender pearl
+  enderPearlDeathDuration: 180
+  # TNT exploding when its fuse runs out
+  explosionDeathDuration: 120
+  # Falling too far
+  fallDeathDuration: 240
+  # A falling anvil hits something
+  fallingAnvilDeathDuration: 300
+  # A non-anvil, non-dripstone falling block hitting an entity
+  fallingBlockDeathDuration: 300
+  # Falling pointed dripstone hitting something
+  fallingStalactiteDeathDuration: 300
+  # A ghast or blaze fireball with an owner hitting an entity directly
+  fireballDeathDuration: 120
+  # An elytra user when their firework explodes
+  fireworksDeathDuration: 180
+  # Colliding with terrain using an elytra
+  flyIntoWallDeathDuration: 300
+  # Ticking damage while freezing in powder snow
+  freezeDeathDuration: 120
+  # Simulating the player_hurt_entity trigger when punching an interaction entity
+  genericDeathDuration: 60
+  # Using /kill
+  genericKillDeathDuration: 20
+  # Standing on a magma block
+  hotFloorDeathDuration: 120
+  # Ticking damage while standing in a fire or soul fire block
+  inFireDeathDuration: 120
+  # Ticking damage while suffocating
+  inWallDeathDuration: 240
+  # Instant damage from a harming/healing potion (drink, splash, or lingering)
+  indirectMagicDeathDuration: 240
+  # Ticking damage while in lava
+  lavaDeathDuration: 300
+  # When struck by lightning
+  lightningDeathDuration: 60
+  # When hit by a mace smash attack
+  maceSmashDeathDuration: 60
+  # Ticking damage from a Harming/Healing effect (i.e. not initial contact)
+  magicDeathDuration: 300
+  # Melee attack dealt by most mobs
+  mobDeathDuration: 60
+  # A goat ramming
+  mobNoAggroDeathDuration: 30
+  # A shulker bullet hitting something
+  mobProjectileDeathDuration: 120
+  # Ticking damage while fire is wearing off
+  onFireDeathDuration: 120
+  # Ticking damage in the void
+  outOfWorldDeathDuration: 60
+  # Ticking damage while outside the world border
+  outsideBorderDeathDuration: 30
+  # A player hitting a mob
+  playerAttackDeathDuration: 30
+  # Anything in explosion, when it can be determined a player was directly responsible
+  playerExplosionDeathDuration: 30
+  # The ranged attack of a warden
+  sonicBoomDeathDuration: 60
+  # A llama spitting
+  spitDeathDuration: 60
+  # Falling too far onto pointed dripstone
+  stalagmiteDeathDuration: 60
+  # Ticking damage from having no food
+  starveDeathDuration: 300
+  # Melee attack dealt by a bee
+  stingDeathDuration: 120
+  # Ticking damage while moving in a berry bush block
+  bushDeathDuration: 120
+  # Recoil damage from attacking a guardian
+  thornsDeathDuration: 90
+  # A snowball, egg, or ender pearl hitting something
+  thrownDeathDuration: 60
+  # A trident hitting something
+  tridentDeathDuration: 60
+  # A wind charge, thrown or fire from a breeze, hitting something
+  windChargeDeathDuration: 240
+  # Ticking damage from a Wither effect
+  witherDeathDuration: 120
+  # A wither skull with an owner hitting something
+  witherSkullDeathDuration: 120
+
+# DO NOT TOUCH THIS. This helps handlig config related changes after updates.
+FileVersion: 1

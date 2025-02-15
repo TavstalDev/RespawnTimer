@@ -1,0 +1,7 @@
+General:
+  Prefix: "&bRespawn&3Timer &8»&r",
+  NoPermission: "%prefix% &cYou do not have permission to do that."
+Died: "&cYou died.",
+Respawning: "&cYou will respawn in %time%.",
+Respawned: "&aYou have respawned."
+Time: "%2.d:%2.d",
