@@ -4,4 +4,4 @@ General:
 Died: "&cMeghaltál."
 Respawning: "&cÚjraéledes %time%."
 Respawned: "&aÚjraéledtél."
-Time: "%2.d:%2.d"
+Time: "%02d:%02d"
