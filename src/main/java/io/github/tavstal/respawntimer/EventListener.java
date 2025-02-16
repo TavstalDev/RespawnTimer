@@ -42,8 +42,10 @@ public class EventListener implements Listener {
         try
         {
             LoggerUtils.LogDebug("PLAYER_CONNECT was called by " + event.getPlayer().name());
-            if (RespawnUtils.IsPlayerDead(event.getPlayer().getUniqueId()))
+            if (RespawnUtils.IsPlayerDead(event.getPlayer().getUniqueId())) {
+                LoggerUtils.LogDebug("Player is dead, setting player to dead state.");
                 RespawnUtils.SetPlayerDead(event.getPlayer(), null);
+            }
         }
         catch (Exception ex)
         {
@@ -61,8 +63,10 @@ public class EventListener implements Listener {
     public void onPlayerQuit(PlayerQuitEvent event) {
         try {
             LoggerUtils.LogDebug("PLAYER_DISCONNECT was called by " + event.getPlayer().name());
-            if (RespawnUtils.IsPlayerDead(event.getPlayer().getUniqueId()))
+            if (RespawnUtils.IsPlayerDead(event.getPlayer().getUniqueId())) {
+                LoggerUtils.LogDebug("Player is dead, temporarily respawning player.");
                 RespawnUtils.RespawnPlayer(event.getPlayer(), true);
+            }
         }
         catch (Exception ex)
         {
@@ -85,16 +89,20 @@ public class EventListener implements Listener {
             if (RespawnTimer.GetConfig().getBoolean("ignoreCreativePlayers") && player.getGameMode() == GameMode.CREATIVE)
                 return;
 
+            LoggerUtils.LogDebug("Player is not in creative mode, continuing with death handling.");
             var mainHandItem = player.getInventory().getItemInMainHand();
             var offhandItem = player.getInventory().getItemInOffHand();
             List<String> totemIds = RespawnTimer.GetConfig().getStringList("totemIds");
             if (totemIds.contains(mainHandItem.toString()) || totemIds.contains(offhandItem.toString()))
                 return;
 
+            LoggerUtils.LogDebug("Player does not have a totem of undying, continuing with death handling.");
             if (RespawnTimer.GetConfig().getBoolean("clearInventory")) {
+                LoggerUtils.LogDebug("Clearing player inventory.");
                 player.getInventory().clear();
             }
             else if (RespawnTimer.GetConfig().getBoolean("dropInventory")) {
+                LoggerUtils.LogDebug("Dropping player inventory.");
                 for (ItemStack item : player.getInventory().getContents()) {
                     if (item != null) {
                         player.getWorld().dropItemNaturally(player.getLocation(), item);
@@ -103,11 +111,14 @@ public class EventListener implements Listener {
                 player.getInventory().clear();
             }
 
+            LoggerUtils.LogDebug("Setting player to dead state.");
             RespawnUtils.SetPlayerDead(player, event.getDamageSource());
+            LoggerUtils.LogDebug("Broadcasting death message.");
             var deathMsg = event.deathMessage();
             if (deathMsg != null)
                 Bukkit.broadcast(deathMsg);
 
+            LoggerUtils.LogDebug("Sending death messages to player.");
             if (RespawnTimer.GetConfig().getBoolean("enableChatMessages")) {
                 ChatUtils.sendLocalizedMsg(player, "Died");
             }
@@ -118,6 +129,7 @@ public class EventListener implements Listener {
                 player.sendActionBar(ChatUtils.translateColors(LocaleUtils.Localize("Died"), true));
             }
 
+            LoggerUtils.LogDebug("Cancelling event.");
             event.setCancelled(true);
         }
         catch (Exception ex)
@@ -137,48 +149,61 @@ public class EventListener implements Listener {
         if (Bukkit.getServer().getCurrentTick() % 20 != 0)
             return;
 
+        LoggerUtils.LogDebug("Checking for dead players...");
         var deadPlayerDictionary = RespawnUtils.GetPlayerDataList();
         var deadPlayers = Collections.list(deadPlayerDictionary.keys());
         for (UUID playerId : deadPlayers) {
-            var player = Bukkit.getPlayer(playerId);
-            if (player == null)
-                continue;
+            try {
+                var player = Bukkit.getPlayer(playerId);
+                if (player == null)
+                    continue;
 
-            long duration = Duration.between(LocalDateTime.now(), deadPlayerDictionary.get(playerId)).getSeconds();
-            if (duration <= 0)
-            {
-                RespawnUtils.RespawnPlayer(player, false);
+                LoggerUtils.LogDebug(String.format("%s is dead, checking if player should be respawned.", player.getName()));
+                long duration = Duration.between(LocalDateTime.now(), deadPlayerDictionary.get(playerId)).getSeconds();
+                if (duration <= 0) {
+                    LoggerUtils.LogDebug("Player should be respawned.");
+                    RespawnUtils.RespawnPlayer(player, false);
 
+                    LoggerUtils.LogDebug("Sending respawn messages to player.");
+                    if (RespawnTimer.GetConfig().getBoolean("enableChatMessages")) {
+                        ChatUtils.sendLocalizedMsg(player, "Respawned");
+                    }
+                    if (RespawnTimer.GetConfig().getBoolean("enableTitleScreen")) {
+                        player.showTitle(Title.title(Component.empty(),
+                                ChatUtils.translateColors(LocaleUtils.Localize("Respawned"), true)));
+                    }
+                    if (RespawnTimer.GetConfig().getBoolean("enableActionBarMessage")) {
+                        player.sendActionBar(ChatUtils.translateColors(LocaleUtils.Localize("Respawned"), true));
+                    }
+                    continue;
+                }
+
+                LoggerUtils.LogDebug("Player should not be respawned yet.");
+                long minutes = duration / 60;
+                long remainingSeconds = duration % 60;
+                String time = String.format(LocaleUtils.Localize("Time"), minutes, remainingSeconds);
+                LoggerUtils.LogDebug(String.format("Sending respawn messages to player. Time remaining: %s", time));
                 if (RespawnTimer.GetConfig().getBoolean("enableChatMessages")) {
-                    ChatUtils.sendLocalizedMsg(player, "Respawned");
+                    ChatUtils.sendLocalizedMsg(player, "Respawning", new Hashtable<>() {{
+                        put("time", time);
+                    }});
                 }
                 if (RespawnTimer.GetConfig().getBoolean("enableTitleScreen")) {
-                    player.showTitle(Title.title(Component.empty(),
-                            ChatUtils.translateColors(LocaleUtils.Localize("Respawned"), true)));
+                    player.showTitle(Title.title(
+                            ChatUtils.translateColors(LocaleUtils.Localize("Died"), true),
+                            ChatUtils.translateColors(LocaleUtils.Localize("Respawning").replace("%time%", time), true),
+                            Title.Times.times(Duration.ZERO, Duration.ofSeconds(5), Duration.ofSeconds(1))
+                    ));
                 }
                 if (RespawnTimer.GetConfig().getBoolean("enableActionBarMessage")) {
-                    player.sendActionBar(ChatUtils.translateColors(LocaleUtils.Localize("Respawned"), true));
+                    player.sendActionBar(ChatUtils.translateColors(LocaleUtils.Localize("Respawning").replace("%time%", time), true));
                 }
-
-                continue;
             }
-
-            long minutes = duration / 60;
-            long remainingSeconds = duration % 60;
-            String time = String.format(LocaleUtils.Localize("Time"), minutes, remainingSeconds);
-            if (RespawnTimer.GetConfig().getBoolean("enableChatMessages")) {
-                ChatUtils.sendLocalizedMsg(player,"Respawning", new Hashtable<>() {{
-                    put("time", time);
-                }});
+            catch (Exception ex)
+            {
+                LoggerUtils.LogError("Error during executing event 'OnServerTick':");
+                LoggerUtils.LogError(ex.getMessage());
             }
-            if (RespawnTimer.GetConfig().getBoolean("enableTitleScreen")) {
-                player.showTitle(Title.title(ChatUtils.translateColors(LocaleUtils.Localize("Died"), true),
-                        ChatUtils.translateColors(LocaleUtils.Localize("Respawning").replace("%time%", time), true)));
-            }
-            if (RespawnTimer.GetConfig().getBoolean("enableActionBarMessage")) {
-                player.sendActionBar(ChatUtils.translateColors(LocaleUtils.Localize("Respawning").replace("%time%", time), true));
-            }
-
         }
     }
 }

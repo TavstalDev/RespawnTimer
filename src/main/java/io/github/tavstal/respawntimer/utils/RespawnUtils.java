@@ -52,33 +52,49 @@ public class RespawnUtils {
      * @param source The source of the damage that killed the player.
      */
     public static void SetPlayerDead(Player player, DamageSource source) {
-        player.setGameMode(GameMode.SPECTATOR);
-        player.setHealth(20);
-        player.clearActivePotionEffects();
-        player.setFoodLevel(20);
-        player.setSaturation(5F);
-        player.setFireTicks(0);
         try {
-           player.playSound(getSound(RespawnTimer.GetConfig().getString("sounds.deathSound")));
-        }
-        catch (Exception ex) { /* ignore */ }
+            LoggerUtils.LogDebug("Setting player as dead: " + player.getName());
+            LoggerUtils.LogDebug("Setting minecraft parameters...");
+            player.setGameMode(GameMode.SPECTATOR);
+            player.setHealth(20);
+            player.clearActivePotionEffects();
+            player.setFoodLevel(20);
+            player.setSaturation(5F);
+            player.setFireTicks(0);
+            try {
+                LoggerUtils.LogDebug("Playing death sound...");
+                player.playSound(getSound(RespawnTimer.GetConfig().getString("sounds.deathSound")));
+            } catch (Exception ex) {
+                LoggerUtils.LogDebug("Error during playing death sound:");
+                LoggerUtils.LogDebug(ex.getMessage());
+            }
 
-        if (IsPlayerDead(player.getUniqueId())) {
-            long duration = Duration.between(LocalDateTime.now(), _deadPlayers.get(player.getUniqueId())).getSeconds();
-            PotionEffect blindnessEffect = new PotionEffect(PotionEffectType.BLINDNESS, (int)duration * 20, 1);
+            // If the player is already dead, update the death time
+            if (IsPlayerDead(player.getUniqueId())) {
+                long duration = Duration.between(LocalDateTime.now(), _deadPlayers.get(player.getUniqueId())).getSeconds();
+                PotionEffect blindnessEffect = new PotionEffect(PotionEffectType.BLINDNESS, (int) duration * 20, 1);
+                player.addPotionEffect(blindnessEffect);
+                return;
+            }
+
+            LoggerUtils.LogDebug("Getting respawn time...");
+            long respawnTime = GetRespawnTime(source);
+            LoggerUtils.LogDebug("Calculating duration...");
+            long duration = Duration.between(LocalDateTime.now(), LocalDateTime.now().plusSeconds(respawnTime)).getSeconds();
+            PotionEffect blindnessEffect = new PotionEffect(PotionEffectType.BLINDNESS, (int) duration * 20, 1);
+            LoggerUtils.LogDebug("Adding blindness effect...");
             player.addPotionEffect(blindnessEffect);
-            return;
+            LoggerUtils.LogDebug("Setting player statistics...");
+            player.setStatistic(Statistic.DEATHS, player.getStatistic(Statistic.DEATHS) + 1);
+            player.setStatistic(Statistic.TIME_SINCE_REST, 0);
+            player.setStatistic(Statistic.TIME_SINCE_DEATH, 0);
+            LoggerUtils.LogDebug("Updating dead players...");
+            _deadPlayers.put(player.getUniqueId(), LocalDateTime.now().plusSeconds(respawnTime));
         }
-
-        long respawnTime = GetRespawnTime(source);
-        long duration = Duration.between(LocalDateTime.now(), _deadPlayers.get(player.getUniqueId())).getSeconds();
-        PotionEffect blindnessEffect = new PotionEffect(PotionEffectType.BLINDNESS, (int)duration * 20, 1);
-        player.addPotionEffect(blindnessEffect);
-        player.setStatistic(Statistic.DEATHS, player.getStatistic(Statistic.DEATHS) + 1);
-        player.setStatistic(Statistic.TIME_SINCE_REST, 0);
-        player.setStatistic(Statistic.TIME_SINCE_DEATH, 0);
-
-        _deadPlayers.put(player.getUniqueId(), LocalDateTime.now().plusSeconds(respawnTime));
+        catch (Exception ex) {
+            LoggerUtils.LogError("Error during setting player as dead:");
+            LoggerUtils.LogError(ex.getMessage());
+        }
     }
 
     /**
