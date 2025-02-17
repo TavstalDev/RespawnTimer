@@ -11,6 +11,7 @@ import org.bukkit.damage.DamageSource;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.intellij.lang.annotations.Subst;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
@@ -171,9 +172,6 @@ public class RespawnUtils {
         else if (damageType == FALLING_BLOCK) {
             respawnTime = RespawnTimer.GetConfig().getInt("durations.fallingAnvilDeathDuration");
         }
-        else if (damageType == FALLING_BLOCK) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.fallingBlockDeathDuration");
-        }
         else if (damageType == FALLING_STALACTITE) {
             respawnTime = RespawnTimer.GetConfig().getInt("durations.fallingStalactiteDeathDuration");
         }
@@ -283,7 +281,7 @@ public class RespawnUtils {
      * @param name The name of the sound.
      * @return The Sound object.
      */
-    public static Sound getSound(String name) {
+    public static Sound getSound(@Subst("") String name) {
         // Fixes null pointer exception
         if ("none".equalsIgnoreCase(name))
             return null;

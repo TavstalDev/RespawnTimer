@@ -123,10 +123,10 @@ public class EventListener implements Listener {
                 ChatUtils.sendLocalizedMsg(player, "Died");
             }
             if (RespawnTimer.GetConfig().getBoolean("enableTitleScreen")) {
-                player.showTitle(Title.title(ChatUtils.translateColors(LocaleUtils.Localize("Died"), true), ChatUtils.translateColors(LocaleUtils.Localize("Died"), true)));
+                player.showTitle(Title.title(ChatUtils.translateColors(LocaleUtils.Localize(player, "Died"), true), ChatUtils.translateColors(LocaleUtils.Localize(player, "Died"), true)));
             }
             if (RespawnTimer.GetConfig().getBoolean("enableActionBarMessage")) {
-                player.sendActionBar(ChatUtils.translateColors(LocaleUtils.Localize("Died"), true));
+                player.sendActionBar(ChatUtils.translateColors(LocaleUtils.Localize(player, "Died"), true));
             }
 
             LoggerUtils.LogDebug("Cancelling event.");
@@ -170,10 +170,10 @@ public class EventListener implements Listener {
                     }
                     if (RespawnTimer.GetConfig().getBoolean("enableTitleScreen")) {
                         player.showTitle(Title.title(Component.empty(),
-                                ChatUtils.translateColors(LocaleUtils.Localize("Respawned"), true)));
+                                ChatUtils.translateColors(LocaleUtils.Localize(player, "Respawned"), true)));
                     }
                     if (RespawnTimer.GetConfig().getBoolean("enableActionBarMessage")) {
-                        player.sendActionBar(ChatUtils.translateColors(LocaleUtils.Localize("Respawned"), true));
+                        player.sendActionBar(ChatUtils.translateColors(LocaleUtils.Localize(player, "Respawned"), true));
                     }
                     continue;
                 }
@@ -181,7 +181,7 @@ public class EventListener implements Listener {
                 LoggerUtils.LogDebug("Player should not be respawned yet.");
                 long minutes = duration / 60;
                 long remainingSeconds = duration % 60;
-                String time = String.format(LocaleUtils.Localize("Time"), minutes, remainingSeconds);
+                String time = String.format(LocaleUtils.Localize(player, "Time"), minutes, remainingSeconds);
                 LoggerUtils.LogDebug(String.format("Sending respawn messages to player. Time remaining: %s", time));
                 if (RespawnTimer.GetConfig().getBoolean("enableChatMessages")) {
                     ChatUtils.sendLocalizedMsg(player, "Respawning", new Hashtable<>() {{
@@ -190,13 +190,13 @@ public class EventListener implements Listener {
                 }
                 if (RespawnTimer.GetConfig().getBoolean("enableTitleScreen")) {
                     player.showTitle(Title.title(
-                            ChatUtils.translateColors(LocaleUtils.Localize("Died"), true),
-                            ChatUtils.translateColors(LocaleUtils.Localize("Respawning").replace("%time%", time), true),
+                            ChatUtils.translateColors(LocaleUtils.Localize(player, "Died"), true),
+                            ChatUtils.translateColors(LocaleUtils.Localize(player, "Respawning").replace("%time%", time), true),
                             Title.Times.times(Duration.ZERO, Duration.ofSeconds(5), Duration.ofSeconds(1))
                     ));
                 }
                 if (RespawnTimer.GetConfig().getBoolean("enableActionBarMessage")) {
-                    player.sendActionBar(ChatUtils.translateColors(LocaleUtils.Localize("Respawning").replace("%time%", time), true));
+                    player.sendActionBar(ChatUtils.translateColors(LocaleUtils.Localize(player, "Respawning").replace("%time%", time), true));
                 }
             }
             catch (Exception ex)
