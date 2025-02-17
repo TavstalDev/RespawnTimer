@@ -1,7 +1,11 @@
-#
-locale: en
+# Supported locales: eng, hun
+locale: eng
+# If true, the plugin will try to use the player's locale
+usePlayerLocale: true
 # Shows more logs than usual. Helps to locate errors.
 debug: false
+# Prefix for all messages
+prefix: "&bRespawn&3Timer &8»&r"
 # Messages related to respawning will be sent to the title screen.
 enableTitleScreen: true
 # Messages related to respawning will be sent to above the action bar.
