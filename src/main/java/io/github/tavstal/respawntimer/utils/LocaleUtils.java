@@ -21,8 +21,9 @@ import java.util.*;
  * Utility class for handling localization using YAML files.
  */
 public class LocaleUtils {
-    private static Dictionary<String, Map<String, Object>> _localization;
+    private static Map<String, Map<String, Object>> _localization;
     private static String _defaultLocale = "eng";
+    private static final String[] _locales = new String[] { "eng", "hun" };
 
     /**
      * Loads the localization file based on the locale specified in the plugin's config.
@@ -30,28 +31,40 @@ public class LocaleUtils {
      * @return true if the localization file was successfully loaded, false otherwise.
      */
     public static Boolean Load() {
-        InputStream inputStream = null;
-        _localization = new Hashtable<>();
+        InputStream inputStream;
+        _localization = new HashMap<>();
         _defaultLocale = RespawnTimer.Instance.getConfig().getString("locale");
 
+        LoggerUtils.LogDebug("Checking lang directory...");
         Path dirPath = Paths.get(RespawnTimer.Instance.getDataFolder().getPath(), "lang");
-        if (!Files.exists(dirPath))
+        if (!Files.exists(dirPath) || DirectoryUtils.isDirectoryEmpty(dirPath))
             try
             {
+                LoggerUtils.LogDebug("Creating lang directory...");
                 Files.createDirectory(dirPath);
 
-                // Copy default locales from resource
-                ClassLoader classLoader = Thread.currentThread().getContextClassLoader();
-                Enumeration<URL> resources = classLoader.getResources("/lang");
+                for (String locale : _locales)
+                {
+                    LoggerUtils.LogDebug("Creating lang file...");
+                    Path filePath = Paths.get(dirPath.toString(), locale + ".yml");
+                    if (Files.exists(filePath))
+                        continue;
 
-                while (resources.hasMoreElements()) {
-                    URL resource = resources.nextElement();
-                    Path path = Paths.get(resource.toURI());
-
-                    try (DirectoryStream<Path> stream = Files.newDirectoryStream(path)) {
-                        for (Path entry : stream) {
-                            Files.copy(entry, Paths.get(dirPath.toString(), entry.getFileName().toString()));
+                    try
+                    {
+                        inputStream = RespawnTimer.Instance.getResource("lang/" + locale + ".yml");
+                        if (inputStream == null)
+                        {
+                            LoggerUtils.LogDebug(String.format("Failed to get localization file for locale '%s'.", locale));
                         }
+                        else
+                            Files.copy(inputStream, filePath);
+                    }
+                    catch (IOException ex)
+                    {
+                        LoggerUtils.LogWarning(String.format("Failed to create lang file for locale '%s'.", locale));
+                        LoggerUtils.LogError(ex.getMessage());
+                        return false;
                     }
                 }
             }
@@ -60,16 +73,14 @@ public class LocaleUtils {
                 LoggerUtils.LogWarning("Failed to create lang directory.");
                 LoggerUtils.LogError(ex.getMessage());
                 return false;
-            } catch (URISyntaxException ex) {
-                LoggerUtils.LogError("Failed to get resource URL.");
-                LoggerUtils.LogError(ex.getMessage());
-                return false;
             }
 
-
+        LoggerUtils.LogDebug("Reading lang directory...");
         try (DirectoryStream<Path> stream = Files.newDirectoryStream(dirPath)) {
+            LoggerUtils.LogDebug("Reading lang files...");
             for (Path entry : stream) {
                 String fileName = entry.getFileName().toString();
+                LoggerUtils.LogDebug("Reading file: " + fileName);
                 if (!(fileName.endsWith(".yml") || fileName.endsWith(".yaml")))
                     continue;
 
@@ -89,6 +100,7 @@ public class LocaleUtils {
                     return false;
                 }
 
+                LoggerUtils.LogDebug("Loading yaml file...");
                 Yaml yaml = new Yaml();
                 Object yamlObject = yaml.load(inputStream);
                 if (!(yamlObject instanceof Map))
@@ -97,9 +109,15 @@ public class LocaleUtils {
                     return false;
                 }
 
-                @SuppressWarnings("unchecked")
-                Map<String, Object> localValue = (Map<String, Object>)yamlObject;
-                _localization.put(fileName.split("\\.")[0], localValue); // Warning fix
+                LoggerUtils.LogDebug("Casting yamlObject to Map...");
+                try {
+                    @SuppressWarnings("unchecked")
+                    Map<String, Object> localValue = (Map<String, Object>) yamlObject;
+                    _localization.put(fileName.split("\\.")[0], localValue); // Warning fix
+                } catch (Exception ex) {
+                    LoggerUtils.LogWarning("Failed to cast the yamlObject to Map.");
+                    LoggerUtils.LogError(ex.getMessage());
+                }
             }
         } catch (IOException ex) {
             LoggerUtils.LogWarning("Failed to read the lang directory.");
@@ -342,7 +360,6 @@ public class LocaleUtils {
             return new String[0];
         }
     }
-
 
     /**
      * Localizes a given key to its corresponding value for a specific player and formats it with the provided arguments.

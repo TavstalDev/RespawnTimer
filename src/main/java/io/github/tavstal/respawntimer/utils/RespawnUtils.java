@@ -15,9 +15,7 @@ import org.intellij.lang.annotations.Subst;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Dictionary;
-import java.util.Hashtable;
-import java.util.UUID;
+import java.util.*;
 
 import static org.bukkit.damage.DamageType.*;
 
@@ -25,14 +23,14 @@ import static org.bukkit.damage.DamageType.*;
  * Utility class for handling player respawn logic.
  */
 public class RespawnUtils {
-    private final static Dictionary<UUID, LocalDateTime> _deadPlayers = new Hashtable<>();
+    private final static Map<UUID, LocalDateTime> _deadPlayers = new HashMap<>();
 
     /**
      * Gets the list of dead players and their death times.
      *
      * @return Dictionary of player UUIDs and their death times.
      */
-    public static Dictionary<UUID, LocalDateTime> GetPlayerDataList() {
+    public static Map<UUID, LocalDateTime> GetPlayerDataList() {
         return _deadPlayers;
     }
 

@@ -18,10 +18,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
-import java.util.Collections;
-import java.util.Hashtable;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class EventListener implements Listener {
     /**
@@ -151,8 +148,7 @@ public class EventListener implements Listener {
 
         LoggerUtils.LogDebug("Checking for dead players...");
         var deadPlayerDictionary = RespawnUtils.GetPlayerDataList();
-        var deadPlayers = Collections.list(deadPlayerDictionary.keys());
-        for (UUID playerId : deadPlayers) {
+        for (UUID playerId : deadPlayerDictionary.keySet()) {
             try {
                 var player = Bukkit.getPlayer(playerId);
                 if (player == null)
@@ -184,7 +180,7 @@ public class EventListener implements Listener {
                 String time = String.format(LocaleUtils.Localize(player, "Time"), minutes, remainingSeconds);
                 LoggerUtils.LogDebug(String.format("Sending respawn messages to player. Time remaining: %s", time));
                 if (RespawnTimer.GetConfig().getBoolean("enableChatMessages")) {
-                    ChatUtils.sendLocalizedMsg(player, "Respawning", new Hashtable<>() {{
+                    ChatUtils.sendLocalizedMsg(player, "Respawning", new HashMap<>() {{
                         put("time", time);
                     }});
                 }
