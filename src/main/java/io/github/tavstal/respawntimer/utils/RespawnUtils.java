@@ -1,5 +1,6 @@
 package io.github.tavstal.respawntimer.utils;
 
+import io.github.tavstal.minecorelib.core.PluginLogger;
 import io.github.tavstal.respawntimer.RespawnTimer;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
@@ -23,6 +24,8 @@ import static org.bukkit.damage.DamageType.*;
  * Utility class for handling player respawn logic.
  */
 public class RespawnUtils {
+    private static final PluginLogger _logger = RespawnTimer.Logger().WithModule(RespawnUtils.class);
+    
     private final static Map<UUID, LocalDateTime> _deadPlayers = new HashMap<>();
 
     /**
@@ -52,8 +55,8 @@ public class RespawnUtils {
      */
     public static void SetPlayerDead(Player player, DamageSource source) {
         try {
-            LoggerUtils.LogDebug("Setting player as dead: " + player.getName());
-            LoggerUtils.LogDebug("Setting minecraft parameters...");
+            _logger.Debug("Setting player as dead: " + player.getName());
+            _logger.Debug("Setting minecraft parameters...");
             player.setGameMode(GameMode.SPECTATOR);
             player.setHealth(20);
             player.clearActivePotionEffects();
@@ -61,11 +64,11 @@ public class RespawnUtils {
             player.setSaturation(5F);
             player.setFireTicks(0);
             try {
-                LoggerUtils.LogDebug("Playing death sound...");
+                _logger.Debug("Playing death sound...");
                 player.playSound(getSound(RespawnTimer.GetConfig().getString("sounds.deathSound")));
             } catch (Exception ex) {
-                LoggerUtils.LogDebug("Error during playing death sound:");
-                LoggerUtils.LogDebug(ex.getMessage());
+                _logger.Debug("Error during playing death sound:");
+                _logger.Debug(ex.getMessage());
             }
 
             // If the player is already dead, update the death time
@@ -76,23 +79,23 @@ public class RespawnUtils {
                 return;
             }
 
-            LoggerUtils.LogDebug("Getting respawn time...");
+            _logger.Debug("Getting respawn time...");
             long respawnTime = GetRespawnTime(source);
-            LoggerUtils.LogDebug("Calculating duration...");
+            _logger.Debug("Calculating duration...");
             long duration = Duration.between(LocalDateTime.now(), LocalDateTime.now().plusSeconds(respawnTime)).getSeconds();
             PotionEffect blindnessEffect = new PotionEffect(PotionEffectType.BLINDNESS, (int) duration * 20, 1);
-            LoggerUtils.LogDebug("Adding blindness effect...");
+            _logger.Debug("Adding blindness effect...");
             player.addPotionEffect(blindnessEffect);
-            LoggerUtils.LogDebug("Setting player statistics...");
+            _logger.Debug("Setting player statistics...");
             player.setStatistic(Statistic.DEATHS, player.getStatistic(Statistic.DEATHS) + 1);
             player.setStatistic(Statistic.TIME_SINCE_REST, 0);
             player.setStatistic(Statistic.TIME_SINCE_DEATH, 0);
-            LoggerUtils.LogDebug("Updating dead players...");
+            _logger.Debug("Updating dead players...");
             _deadPlayers.put(player.getUniqueId(), LocalDateTime.now().plusSeconds(respawnTime));
         }
         catch (Exception ex) {
-            LoggerUtils.LogError("Error during setting player as dead:");
-            LoggerUtils.LogError(ex.getMessage());
+            _logger.Error("Error during setting player as dead:");
+            _logger.Error(ex.getMessage());
         }
     }
 
