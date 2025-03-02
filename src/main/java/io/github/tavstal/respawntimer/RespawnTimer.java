@@ -10,7 +10,6 @@ import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.plugin.java.JavaPlugin;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
 import org.json.simple.parser.ParseException;
@@ -113,10 +112,10 @@ public class RespawnTimer extends PluginBase {
             getCustomLogger().Debug("Parsing release version...");
             version = jsonObject.get("tag_name").toString();
         } catch (IOException e) {
-            getCustomLogger().LogError("Failed to check for updates.");
+            getCustomLogger().Error("Failed to check for updates.");
             return false;
         } catch (ParseException e) {
-            getCustomLogger().LogError("Failed to parse release version.");
+            getCustomLogger().Error("Failed to parse release version.");
             return false;
         }
 
