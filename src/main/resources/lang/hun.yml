@@ -4,3 +4,6 @@ Died: "&cMeghaltál."
 Respawning: "&cÚjraéledes %time%."
 Respawned: "&aÚjraéledtél."
 Time: "%02d:%02d"
+
+# DO NOT TOUCH THIS. This helps to handle config related changes after updates.
+FileVersion: 1

@@ -4,3 +4,6 @@ Died: "&cYou died."
 Respawning: "&cYou will respawn in %time%."
 Respawned: "&aYou have respawned."
 Time: "%02d:%02d"
+
+# DO NOT TOUCH THIS. This helps to handle config related changes after updates.
+FileVersion: 1

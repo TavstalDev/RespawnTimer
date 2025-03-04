@@ -133,5 +133,5 @@ durations:
   # A wither skull with an owner hitting something
   witherSkullDeathDuration: 120
 
-# DO NOT TOUCH THIS. This helps handlig config related changes after updates.
+# DO NOT TOUCH THIS. This helps to handle config related changes after updates.
 FileVersion: 1
