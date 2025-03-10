@@ -18,11 +18,10 @@ import java.io.IOException;
 
 public class RespawnTimer extends PluginBase {
     public static RespawnTimer Instance;
+    private final PluginLogger _logger;
+    private final PluginTranslator _translator;
     public static PluginLogger Logger() {
         return Instance.getCustomLogger();
-    }
-    public static PluginTranslator Translator() {
-        return Instance.getTranslator();
     }
     /**
      * Gets the plugin configuration.
@@ -39,6 +38,8 @@ public class RespawnTimer extends PluginBase {
                 "https://github.com/TavstalDev/RespawnTimer/releases/latest",
                 new String[] { "eng", "hun" }
         );
+        _logger = getCustomLogger();
+        _translator = getTranslator();
     }
 
     /**
@@ -48,7 +49,7 @@ public class RespawnTimer extends PluginBase {
     @Override
     public void onEnable() {
         Instance = this;
-        getCustomLogger().Info("Loading RespawnTimer...");
+        _logger.Info("Loading RespawnTimer...");
 
         // Register Events
         EventListener.init();
@@ -57,17 +58,17 @@ public class RespawnTimer extends PluginBase {
         saveDefaultConfig();
 
         // Load Localizations
-        if (!getTranslator().Load())
+        if (!_translator.Load())
         {
-            getCustomLogger().Error("Failed to load localizations... Unloading...");
+            _logger.Error("Failed to load localizations... Unloading...");
             Bukkit.getPluginManager().disablePlugin(this);
             return;
         }
 
         // Schedule a task to run every second
-        getCustomLogger().Info("RespawnTimer has been successfully loaded.");
+        _logger.Info("RespawnTimer has been successfully loaded.");
         if (!isUpToDate())
-            getCustomLogger().Warn("A new version of RespawnTimer is available! Download it at: " + getDownloadUrl());
+            _logger.Warn("A new version of RespawnTimer is available! Download it at: " + getDownloadUrl());
     }
 
     /**
@@ -76,51 +77,20 @@ public class RespawnTimer extends PluginBase {
      */
     @Override
     public void onDisable() {
-        getCustomLogger().Info("RespawnTimer has been successfully unloaded.");
+        _logger.Info("RespawnTimer has been successfully unloaded.");
     }
 
     /**
      * Reloads the plugin configuration and localizations.
      */
     public void reload() {
-        getCustomLogger().Info("Reloading RespawnTimer...");
-        getCustomLogger().Debug("Reloading localizations...");
-        getTranslator().Load();
-        getCustomLogger().Debug("Localizations reloaded.");
-        getCustomLogger().Debug("Reloading configuration...");
+        _logger.Info("Reloading RespawnTimer...");
+        _logger.Debug("Reloading localizations...");
+        _translator.Load();
+        _logger.Debug("Localizations reloaded.");
+        _logger.Debug("Reloading configuration...");
         this.reloadConfig();
-        getCustomLogger().Debug("Configuration reloaded.");
-        getCustomLogger().Info("RespawnTimer reloaded.");
-    }
-
-    /**
-     * Checks if the plugin is up to date by comparing the current version with the latest release version.
-     * @return true if the plugin is up to date, false otherwise.
-     */
-    public boolean isUpToDate() {
-        String version;
-        getCustomLogger().Debug("Checking for updates...");
-        try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
-            getCustomLogger().Debug("Sending request to GitHub...");
-            HttpGet request = new HttpGet(getDownloadUrl());
-            HttpResponse response = httpClient.execute(request);
-            getCustomLogger().Debug("Received response from GitHub.");
-            String jsonResponse = EntityUtils.toString(response.getEntity());
-            getCustomLogger().Debug("Parsing response...");
-            JSONParser parser = new JSONParser();
-            JSONObject jsonObject = (JSONObject) parser.parse(jsonResponse);
-            getCustomLogger().Debug("Parsing release version...");
-            version = jsonObject.get("tag_name").toString();
-        } catch (IOException e) {
-            getCustomLogger().Error("Failed to check for updates.");
-            return false;
-        } catch (ParseException e) {
-            getCustomLogger().Error("Failed to parse release version.");
-            return false;
-        }
-
-        getCustomLogger().Debug("Current version: " + getVersion());
-        getCustomLogger().Debug("Latest version: " + version);
-        return version.equalsIgnoreCase(getVersion());
+        _logger.Debug("Configuration reloaded.");
+        _logger.Info("RespawnTimer reloaded.");
     }
 }
