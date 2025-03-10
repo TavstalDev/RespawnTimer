@@ -21,4 +21,4 @@ This project is licensed under the GNU General Public License v3.0. See the `LIC
 
 ## Contact
 
-For issues or feature requests, please use the [GitHub issue tracker](https://github.com/TavstalDev/OpenHeads/issues).
+For issues or feature requests, please use the [GitHub issue tracker](https://github.com/TavstalDev/RespawnTimer/issues).
