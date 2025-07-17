@@ -1,9 +1,9 @@
-package io.github.tavstal.respawntimer;
+package io.github.tavstaldev.respawntimer;
 
 import com.destroystokyo.paper.event.server.ServerTickEndEvent;
-import io.github.tavstal.minecorelib.core.PluginLogger;
-import io.github.tavstal.minecorelib.utils.ChatUtils;
-import io.github.tavstal.respawntimer.utils.RespawnUtils;
+import io.github.tavstaldev.minecorelib.core.PluginLogger;
+import io.github.tavstaldev.minecorelib.utils.ChatUtils;
+import io.github.tavstaldev.respawntimer.utils.RespawnUtils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.title.Title;
 import org.bukkit.Bukkit;

@@ -1,20 +1,10 @@
-package io.github.tavstal.respawntimer;
+package io.github.tavstaldev.respawntimer;
 
-import io.github.tavstal.minecorelib.PluginBase;
-import io.github.tavstal.minecorelib.core.PluginLogger;
-import io.github.tavstal.minecorelib.core.PluginTranslator;
-import org.apache.http.HttpResponse;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.CloseableHttpClient;
-import org.apache.http.impl.client.HttpClients;
-import org.apache.http.util.EntityUtils;
+import io.github.tavstaldev.minecorelib.PluginBase;
+import io.github.tavstaldev.minecorelib.core.PluginLogger;
+import io.github.tavstaldev.minecorelib.core.PluginTranslator;
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
-import org.json.simple.JSONObject;
-import org.json.simple.parser.JSONParser;
-import org.json.simple.parser.ParseException;
-
-import java.io.IOException;
 
 public class RespawnTimer extends PluginBase {
     public static RespawnTimer Instance;

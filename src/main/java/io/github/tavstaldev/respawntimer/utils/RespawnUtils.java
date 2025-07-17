@@ -1,7 +1,7 @@
-package io.github.tavstal.respawntimer.utils;
+package io.github.tavstaldev.respawntimer.utils;
 
-import io.github.tavstal.minecorelib.core.PluginLogger;
-import io.github.tavstal.respawntimer.RespawnTimer;
+import io.github.tavstaldev.minecorelib.core.PluginLogger;
+import io.github.tavstaldev.respawntimer.RespawnTimer;
 import net.kyori.adventure.key.Key;
 import net.kyori.adventure.sound.Sound;
 import org.bukkit.Bukkit;
