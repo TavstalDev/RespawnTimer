@@ -2,23 +2,16 @@ package io.github.tavstaldev.respawntimer.utils;
 
 import io.github.tavstaldev.minecorelib.core.PluginLogger;
 import io.github.tavstaldev.respawntimer.RespawnTimer;
-import net.kyori.adventure.key.Key;
-import net.kyori.adventure.sound.Sound;
-import org.bukkit.Bukkit;
-import org.bukkit.GameMode;
-import org.bukkit.Statistic;
-import org.bukkit.World;
+import org.bukkit.*;
 import org.bukkit.damage.DamageSource;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.intellij.lang.annotations.Subst;
+import org.jetbrains.annotations.NotNull;
 
 import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.*;
-
-import static org.bukkit.damage.DamageType.*;
 
 /**
  * Utility class for handling player respawn logic.
@@ -53,6 +46,7 @@ public class RespawnUtils {
      * @param player The player to set as dead.
      * @param source The source of the damage that killed the player.
      */
+    @SuppressWarnings("UnstableApiUsage")
     public static void SetPlayerDead(Player player, DamageSource source) {
         try {
             _logger.Debug("Setting player as dead: " + player.getName());
@@ -63,13 +57,7 @@ public class RespawnUtils {
             player.setFoodLevel(20);
             player.setSaturation(5F);
             player.setFireTicks(0);
-            try {
-                _logger.Debug("Playing death sound...");
-                player.playSound(getSound(RespawnTimer.GetConfig().getString("sounds.deathSound")));
-            } catch (Exception ex) {
-                _logger.Debug("Error during playing death sound:");
-                _logger.Debug(ex.getMessage());
-            }
+            playSound(player, RespawnTimer.GetConfig().getString("sounds.death"));
 
             // If the player is already dead, update the death time
             if (IsPlayerDead(player.getUniqueId())) {
@@ -106,20 +94,28 @@ public class RespawnUtils {
      * @param isTemporal If true, the player is temporarily respawned.
      */
     public static void RespawnPlayer(Player player, boolean isTemporal) {
-        if (!isTemporal)
-            _deadPlayers.remove(player.getUniqueId());
-        player.setGameMode(GameMode.SURVIVAL);
-        player.clearActivePotionEffects();
+        try {
+            if (!isTemporal)
+                _deadPlayers.remove(player.getUniqueId());
+            player.setGameMode(GameMode.SURVIVAL);
+            player.clearActivePotionEffects();
 
-        if (RespawnTimer.GetConfig().getBoolean("allowHomeRespawn")) {
-            if (player.getRespawnLocation() != null) {
-                player.teleport(player.getRespawnLocation());
-                return;
+            if (RespawnTimer.GetConfig().getBoolean("allowHomeRespawn")) {
+                if (player.getRespawnLocation() != null) {
+                    player.teleport(player.getRespawnLocation());
+                    playSound(player, RespawnTimer.GetConfig().getString("sounds.respawn"));
+                    return;
+                }
             }
+            World overworld = Bukkit.getServer().getWorld("world");
+            if (overworld != null) {
+                player.teleport(overworld.getSpawnLocation());
+            }
+            playSound(player, RespawnTimer.GetConfig().getString("sounds.respawn"));
         }
-        World overworld = Bukkit.getServer().getWorld("world");
-        if (overworld != null) {
-            player.teleport(overworld.getSpawnLocation());
+        catch (Exception ex) {
+            _logger.Error("Error during respawning player:");
+            _logger.Error(ex.getMessage());
         }
     }
 
@@ -132,148 +128,252 @@ public class RespawnUtils {
     @SuppressWarnings("UnstableApiUsage")
     private static long GetRespawnTime(DamageSource source) {
         int respawnTime = 60;
-        var damageType = source.getDamageType();
+        try {
+            var damageType = source.getDamageType();
+            var config = RespawnTimer.GetConfig();
 
-        if (damageType == ARROW) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.arrowDeathDuration");
+            var damageTypeName = damageType.getKey().value();
+            switch (damageTypeName.toLowerCase()) {
+                case "arrow": {
+                    respawnTime = config.getInt("durations.arrowDeathDuration");
+                    break;
+                }
+                case "bad_respawn_point": {
+                    respawnTime = config.getInt("durations.badRespawnPointDeathDuration");
+                    break;
+                }
+                case "sweet_berry_bush": {
+                    respawnTime = config.getInt("durations.bushDeathDuration");
+                    break;
+                }
+                case "cactus": {
+                    respawnTime = config.getInt("durations.cactusDeathDuration");
+                    break;
+                }
+                case "campfire": {
+                    respawnTime = config.getInt("durations.campfireDeathDuration");
+                    break;
+                }
+                case "cramming": {
+                    respawnTime = config.getInt("durations.crammingDeathDuration");
+                    break;
+                }
+                case "dragon_breath": {
+                    respawnTime = config.getInt("durations.dragonBreathDeathDuration");
+                    break;
+                }
+                case "drown": {
+                    respawnTime = config.getInt("durations.drownDeathDuration");
+                    break;
+                }
+                case "dry_out": {
+                    respawnTime = config.getInt("durations.dryOutDeathDuration");
+                    break;
+                }
+                case "ender_pearl": {
+                    respawnTime = config.getInt("durations.enderPearlDeathDuration");
+                    break;
+                }
+                case "explosion": {
+                    respawnTime = config.getInt("durations.explosionDeathDuration");
+                    break;
+                }
+                case "fall": {
+                    respawnTime = config.getInt("durations.fallDeathDuration");
+                    break;
+                }
+                case "falling_block": {
+                    respawnTime = config.getInt("durations.fallingAnvilDeathDuration");
+                    break;
+                }
+                case "falling_stalactite": {
+                    respawnTime = config.getInt("durations.fallingStalactiteDeathDuration");
+                    break;
+                }
+                case "fireball":
+                case "unattributed_fireball":  // Unattributed fireballs are used by some entities like ghasts
+                {
+                    respawnTime = config.getInt("durations.fireballDeathDuration");
+                    break;
+                }
+                case "fireworks": {
+                    respawnTime = config.getInt("durations.fireworksDeathDuration");
+                    break;
+                }
+                case "fly_into_wall": {
+                    respawnTime = config.getInt("durations.flyIntoWallDeathDuration");
+                    break;
+                }
+                case "freeze": {
+                    respawnTime = config.getInt("durations.freezeDeathDuration");
+                    break;
+                }
+                case "generic": {
+                    respawnTime = config.getInt("durations.genericDeathDuration");
+                    break;
+                }
+                case "generic_kill": {
+                    respawnTime = config.getInt("durations.genericKillDeathDuration");
+                    break;
+                }
+                case "hot_floor": {
+                    respawnTime = config.getInt("durations.hotFloorDeathDuration");
+                    break;
+                }
+                case "indirect_magic": {
+                    respawnTime = config.getInt("durations.indirectMagicDeathDuration");
+                    break;
+                }
+                case "in_fire": {
+                    respawnTime = config.getInt("durations.inFireDeathDuration");
+                    break;
+                }
+                case "in_wall": {
+                    respawnTime = config.getInt("durations.inWallDeathDuration");
+                    break;
+                }
+                case "lava": {
+                    respawnTime = config.getInt("durations.lavaDeathDuration");
+                    break;
+                }
+                case "lightning_bolt": {
+                    respawnTime = config.getInt("durations.lightningDeathDuration");
+                    break;
+                }
+                case "mace_smash": {
+                    respawnTime = config.getInt("durations.maceSmashDeathDuration");
+                    break;
+                }
+                case "magic": {
+                    respawnTime = config.getInt("durations.magicDeathDuration");
+                    break;
+                }
+                case "mob_attack": {
+                    respawnTime = config.getInt("durations.mobDeathDuration");
+                    break;
+                }
+                case "mob_attack_no_aggro": {
+                    respawnTime = config.getInt("durations.mobNoAggroDeathDuration");
+                    break;
+                }
+                case "mob_projectile": {
+                    respawnTime = config.getInt("durations.mobProjectileDeathDuration");
+                    break;
+                }
+                case "on_fire": {
+                    respawnTime = config.getInt("durations.onFireDeathDuration");
+                    break;
+                }
+                case "out_of_world": {
+                    respawnTime = config.getInt("durations.outOfWorldDeathDuration");
+                    break;
+                }
+                case "player_attack": {
+                    respawnTime = config.getInt("durations.playerAttackDeathDuration");
+                    break;
+                }
+                case "player_explosion": {
+                    respawnTime = config.getInt("durations.playerExplosionDeathDuration");
+                    break;
+                }
+                case "sonic_boom": {
+                    respawnTime = config.getInt("durations.sonicBoomDeathDuration");
+                    break;
+                }
+                case "spit": {
+                    respawnTime = config.getInt("durations.spitDeathDuration");
+                    break;
+                }
+                case "stalagmite": {
+                    respawnTime = config.getInt("durations.stalagmiteDeathDuration");
+                    break;
+                }
+                case "starve": {
+                    respawnTime = config.getInt("durations.starveDeathDuration");
+                    break;
+                }
+                case "sting": {
+                    respawnTime = config.getInt("durations.stingDeathDuration");
+                    break;
+                }
+                case "thorns": {
+                    respawnTime = config.getInt("durations.thornsDeathDuration");
+                    break;
+                }
+                case "thrown": {
+                    respawnTime = config.getInt("durations.thrownDeathDuration");
+                    break;
+                }
+                case "trident": {
+                    respawnTime = config.getInt("durations.tridentDeathDuration");
+                    break;
+                }
+                case "wind_charge": {
+                    respawnTime = config.getInt("durations.windChargeDeathDuration");
+                    break;
+                }
+                case "wither": {
+                    respawnTime = config.getInt("durations.witherDeathDuration");
+                    break;
+                }
+                case "wither_skull": {
+                    respawnTime = config.getInt("durations.witherSkullDeathDuration");
+                    break;
+                }
+                default:
+                {
+                    _logger.Warn("Unknown damage type: " + damageTypeName + ". Using default respawn time.");
+                    break;
+                }
+            }
         }
-        else if (damageType == BAD_RESPAWN_POINT) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.badRespawnPointDeathDuration");
-        }
-        else if (damageType == SWEET_BERRY_BUSH) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.bushDeathDuration");
-        }
-        else if (damageType == CACTUS) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.cactusDeathDuration");
-        }
-        else if (damageType == CAMPFIRE) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.campfireDeathDuration");
-        }
-        else if (damageType == CRAMMING) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.crammingDeathDuration");
-        }
-        else if (damageType == DRAGON_BREATH) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.dragonBreathDeathDuration");
-        }
-        else if (damageType == DROWN) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.drownDeathDuration");
-        }
-        else if (damageType == DRY_OUT) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.dryOutDeathDuration");
-        }
-        else if (damageType == ENDER_PEARL) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.enderPearlDeathDuration");
-        }
-        else if (damageType == EXPLOSION) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.explosionDeathDuration");
-        }
-        else if (damageType == FALL) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.fallDeathDuration");
-        }
-        else if (damageType == FALLING_BLOCK) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.fallingAnvilDeathDuration");
-        }
-        else if (damageType == FALLING_STALACTITE) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.fallingStalactiteDeathDuration");
-        }
-        else if (damageType == FIREBALL || damageType == UNATTRIBUTED_FIREBALL) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.fireballDeathDuration");
-        }
-        else if (damageType == FIREWORKS) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.fireworksDeathDuration");
-        }
-        else if (damageType == FLY_INTO_WALL) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.flyIntoWallDeathDuration");
-        }
-        else if (damageType == FREEZE) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.freezeDeathDuration");
-        }
-        else if (damageType == GENERIC) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.genericDeathDuration");
-        }
-        else if (damageType == GENERIC_KILL) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.genericKillDeathDuration");
-        }
-        else if (damageType == HOT_FLOOR) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.hotFloorDeathDuration");
-        }
-        else if (damageType == INDIRECT_MAGIC) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.indirectMagicDeathDuration");
-        }
-        else if (damageType == IN_FIRE) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.inFireDeathDuration");
-        }
-        else if (damageType == IN_WALL) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.inWallDeathDuration");
-        }
-        else if (damageType == LAVA) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.lavaDeathDuration");
-        }
-        else if (damageType == LIGHTNING_BOLT) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.lightningDeathDuration");
-        }
-        else if (damageType == MACE_SMASH) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.maceSmashDeathDuration");
-        }
-        else if (damageType == MAGIC) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.magicDeathDuration");
-        }
-        else if (damageType == MOB_ATTACK) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.mobDeathDuration");
-        }
-        else if (damageType == MOB_ATTACK_NO_AGGRO) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.mobNoAggroDeathDuration");
-        }
-        else if (damageType == MOB_PROJECTILE) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.mobProjectileDeathDuration");
-        }
-        else if (damageType == ON_FIRE) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.onFireDeathDuration");
-        }
-        else if (damageType == OUT_OF_WORLD) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.outOfWorldDeathDuration");
-        }
-        else if (damageType == PLAYER_ATTACK) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.playerAttackDeathDuration");
-        }
-        else if (damageType == PLAYER_EXPLOSION) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.playerExplosionDeathDuration");
-        }
-        else if (damageType == SONIC_BOOM) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.sonicBoomDeathDuration");
-        }
-        else if (damageType == SPIT) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.spitDeathDuration");
-        }
-        else if (damageType == STALAGMITE) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.stalagmiteDeathDuration");
-        }
-        else if (damageType == STARVE) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.starveDeathDuration");
-        }
-        else if (damageType == STING) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.stingDeathDuration");
-        }
-        else if (damageType == THORNS) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.thornsDeathDuration");
-        }
-        else if (damageType == THROWN) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.thrownDeathDuration");
-        }
-        else if (damageType == TRIDENT) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.tridentDeathDuration");
-        }
-        else if (damageType == WIND_CHARGE) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.windChargeDeathDuration");
-        }
-        else if (damageType == WITHER) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.witherDeathDuration");
-        }
-        else if (damageType == WITHER_SKULL) {
-            respawnTime = RespawnTimer.GetConfig().getInt("durations.witherSkullDeathDuration");
+        catch (Exception ex) {
+            _logger.Error("Error during getting respawn time:");
+            _logger.Error(ex.getMessage());
         }
 
         return respawnTime;
+    }
+
+    /**
+     * Plays a sound for the specified player.
+     *
+     * @param player The player for whom the sound will be played. Must not be null.
+     * @param key The key of the sound to play. If null, empty, or "none" (case-insensitive), no sound will be played.
+     * <br/>
+     * The method attempts to retrieve the sound using the provided key and plays it for the player.
+     * If the sound is not found, a warning is logged. Any exceptions during execution are caught and logged as errors.
+     */
+    public static void playSound(@NotNull Player player, String key) {
+        try {
+            // Check if the key is null, empty, or "none", and return early if so
+            if (key == null || key.isEmpty() || "none".equalsIgnoreCase(key)) {
+                _logger.Debug("No sound key provided or sound is set to 'none'. Not playing any sound.");
+                return;
+            }
+
+            // Log debug information about the player for whom the sound is being played
+            _logger.Debug("Playing sound for player: " + player.getName());
+
+            // Retrieve the sound object using the provided key
+            Sound sound = getSound(key);
+
+            // If the sound is found, play it for the player; otherwise, log a warning
+            if (sound != null) {
+                player.playSound(
+                        player.getLocation(),  // location of the sound
+                        sound,
+                        1.0f,
+                        1.0f
+                );
+            } else {
+                _logger.Warn("Sound not found: " + key);
+            }
+        } catch (Exception ex) {
+            // Log any exceptions that occur during the execution of the method
+            _logger.Error("Error during playing sound:");
+            _logger.Error(ex.getMessage());
+        }
     }
 
     /**
@@ -282,12 +382,18 @@ public class RespawnUtils {
      * @param name The name of the sound.
      * @return The Sound object.
      */
-    public static Sound getSound(@Subst("") String name) {
+    public static Sound getSound(@NotNull String name) {
+        String key = name.toLowerCase(Locale.ROOT);
         // Fixes null pointer exception
-        if ("none".equalsIgnoreCase(name))
+        if ("none".equalsIgnoreCase(key))
             return null;
 
-        String key = name == null ? "minecraft:block.note_block.harp" : "minecraft:" + name;
-        return Sound.sound(Key.key(key), Sound.Source.PLAYER, 1.0f, 1.0f);
+        var namespacedKey = NamespacedKey.fromString(key);
+        if (namespacedKey == null) {
+            _logger.Warn("Invalid sound name: " + key);
+            return null;
+        }
+
+        return Registry.SOUNDS.get(namespacedKey);
     }
 }
