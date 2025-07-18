@@ -22,7 +22,12 @@ dropInventory: false
 allowLocationRespawn: false
 # If the player has bed they will be respawned there, instead of at the world spawn.
 allowHomeRespawn: true
-deathSound: "LIGHTNING_BOLT_THUNDER"
+
+# The sound event triggered on successful respawn.
+# Use none to disable the sound.
+sounds:
+  death: "entity.lightning_bolt.thunder"
+  respawn: "entity.player.levelup"
 
 # What items should be recognised as totems.
 totemIds:
