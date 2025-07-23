@@ -1,7 +1,7 @@
 # RespawnTimer
 
 ![Release (latest by date)](https://img.shields.io/github/v/release/TavstalDev/RespawnTimer?style=plastic-square)
-![Workflow Status](https://img.shields.io/github/actions/workflow/status/TavstalDev/RespawnTimer/release.yml?branch=stable&label=build&style=plastic-square)
+![Workflow Status](https://img.shields.io/github/actions/workflow/status/TavstalDev/RespawnTimer/ghrelease.yml?branch=stable&label=build&style=plastic-square)
 ![License](https://img.shields.io/github/license/TavstalDev/RespawnTimer?style=plastic-square)
 ![Downloads](https://img.shields.io/github/downloads/TavstalDev/RespawnTimer/total?style=plastic-square)
 ![Issues](https://img.shields.io/github/issues/TavstalDev/RespawnTimer?style=plastic-square)
